@@ -6,7 +6,7 @@ import Image from 'next/image'
 
 export default function LoginTemplate() {
   return (
-    <div className="h-dvh w-full flex justify-center items-center">
+    <div className="h-full w-full flex justify-center items-center">
       <Card className="px-28 py-28 border-none">
         <CardTitle className="flex justify-center px-0">
           <Headphones className="bg-icon-background text-white w-auto h-auto px-3 py-3 rounded-md" />

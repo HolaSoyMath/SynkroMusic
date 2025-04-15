@@ -31,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistMontserrat.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistMontserrat.variable} ${geistSans.variable} ${geistMono.variable} antialiased h-dvh w-dvw`}
       >
         <ThemeProvider
           attribute="class"
