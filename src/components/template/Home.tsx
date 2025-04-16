@@ -17,11 +17,8 @@ export default function HomeTemplate() {
         </div>
 
         {/* Parte inferior */}
-        <div className="h-1/2 pt-7">
-          {/* Informações da playlist */}
+        <div className="h-1/2 pt-7 flex flex-col ">
           <PlaylistInfo name="Playlist 14" quantity={15} time="1h30m" />
-
-          {/* Carrossel */}
           <PlaylistCarousel />
         </div>
       </section>

@@ -1,4 +1,4 @@
-export default interface UserPlaylistsSpotify 
+export const UserPlaylistsSpotify =
 {
   "href": "https://api.spotify.com/v1/users/baconhado/playlists?offset=0&limit=50&locale=pt-BR,pt;q%3D0.9,en-US;q%3D0.8,en;q%3D0.7",
   "limit": 50,
