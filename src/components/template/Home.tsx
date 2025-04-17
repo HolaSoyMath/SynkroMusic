@@ -1,3 +1,5 @@
+'use client'
+
 import { musicPLaylist } from "@/mock/MusicsOnPlaylistSpotify";
 import ImageSelectedMusic from "../imageSelectedMusic";
 import ItemMusic from "../music/itemMusic";
@@ -5,8 +7,11 @@ import PlaylistCarousel from "../playlist/playlistCarousel";
 import PlaylistInfo from "../playlist/playlistInfo";
 import VinylCover from "../playlist/vinylCover";
 import PlayInstrument from "../music/playInstrument";
+import { useState } from "react";
 
 export default function HomeTemplate() {
+  const [selectedMusics, setSelectedMusics] = useState<string[]>([]);
+
   const tracks = musicPLaylist.tracks.items;
 
   return (
@@ -37,6 +42,9 @@ export default function HomeTemplate() {
               <ItemMusic
                 name={track.track.name}
                 durationMs={track.track.duration_ms}
+                musicId={track.track.id}
+                setSelectedMusic={setSelectedMusics}
+                selectedMusics={selectedMusics}
                 key={track.track.id}
               />
             ))}
