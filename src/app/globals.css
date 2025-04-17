@@ -123,3 +123,12 @@
     @apply bg-background text-foreground font-montserrat;
   }
 }
+
+@layer utilities {
+  .slider-gray-blue > div {
+    @apply bg-gray-200;
+  }
+  .slider-gray-blue > div > div {
+    @apply bg-blue-600;
+  }
+}
