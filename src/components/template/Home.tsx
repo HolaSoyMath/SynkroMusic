@@ -7,7 +7,7 @@ import PlaylistCarousel from "../playlist/playlistCarousel";
 import PlaylistInfo from "../playlist/playlistInfo";
 import VinylCover from "../playlist/vinylCover";
 import PlayInstrument from "../music/playInstrument";
-import { useState } from "react";
+import {  useState } from "react";
 import LogoutButton from "../logoutButton";
 
 export default function HomeTemplate() {

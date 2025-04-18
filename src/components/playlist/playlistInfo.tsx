@@ -13,6 +13,7 @@ interface PlaylistInfoInterface {
 
 export default function PlaylistInfo(infos: PlaylistInfoInterface) {
   const [openModal, setOpenModal] = useState(false);
+
   const { name, quantity, time } = infos;
 
   return (
