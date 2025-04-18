@@ -8,6 +8,7 @@ import PlaylistInfo from "../playlist/playlistInfo";
 import VinylCover from "../playlist/vinylCover";
 import PlayInstrument from "../music/playInstrument";
 import { useState } from "react";
+import LogoutButton from "../logoutButton";
 
 export default function HomeTemplate() {
   const [selectedMusics, setSelectedMusics] = useState<string[]>([]);
@@ -33,6 +34,9 @@ export default function HomeTemplate() {
       <section className="relative h-full w-1/2 overflow-hidden">
         <ImageSelectedMusic className="blur-xl object-cover" />
         <div className="absolute inset-0 flex flex-col bg-white/60">
+            <div className="fixed right-2 top-2">
+              <LogoutButton />
+            </div>
           <div className="flex-none h-2/12 flex items-center px-15">
             <p className="text-3xl font-bold text-background">What I’ve Done</p>
           </div>
