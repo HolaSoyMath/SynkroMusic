@@ -1,20 +1,19 @@
-"use client";
+'use client'
 
-import { RotateCw } from "lucide-react";
-import { Button } from "../ui/button";
-import ModalProcessing from "../modalProcessing";
-import { useState } from "react";
+import { RotateCw } from 'lucide-react'
+import { Button } from '../ui/button'
+import ModalProcessing from '../modalProcessing'
+import { useState } from 'react'
 
 interface PlaylistInfoInterface {
-  name: string;
-  quantity: number;
-  time: string;
+  name: string
+  quantity: number
+  time: string
 }
 
 export default function PlaylistInfo(infos: PlaylistInfoInterface) {
-  const [openModal, setOpenModal] = useState(false);
-
-  const { name, quantity, time } = infos;
+  const [openModal, setOpenModal] = useState(false)
+  const { name, quantity, time } = infos
 
   return (
     <div className="flex w-full h-5/12 px-12">
@@ -39,5 +38,5 @@ export default function PlaylistInfo(infos: PlaylistInfoInterface) {
         <ModalProcessing openModal={openModal} setOpenModal={setOpenModal} />
       )}
     </div>
-  );
+  )
 }
