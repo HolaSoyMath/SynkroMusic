@@ -7,11 +7,12 @@ import PlaylistCarousel from "../playlist/playlistCarousel";
 import PlaylistInfo from "../playlist/playlistInfo";
 import VinylCover from "../playlist/vinylCover";
 import PlayInstrument from "../music/playInstrument";
-import {  useState } from "react";
+import { useState } from "react";
 import LogoutButton from "../logoutButton";
 
 export default function HomeTemplate() {
   const [selectedMusics, setSelectedMusics] = useState<string[]>([]);
+  const [lastSlectedMusic, setLastSelectedMusic] = useState('')
 
   const tracks = musicPLaylist.tracks.items;
 
@@ -38,7 +39,7 @@ export default function HomeTemplate() {
               <LogoutButton />
             </div>
           <div className="flex-none h-2/12 flex items-center px-15">
-            <p className="text-3xl font-bold text-background">What I’ve Done</p>
+            <p className="text-3xl font-bold text-background">{lastSlectedMusic}</p>
           </div>
 
           <div className="flex-1 overflow-y-scroll">
@@ -49,6 +50,7 @@ export default function HomeTemplate() {
                 musicId={track.track.id}
                 setSelectedMusic={setSelectedMusics}
                 selectedMusics={selectedMusics}
+                setLastSelectedMusic={setLastSelectedMusic}
                 key={track.track.id}
               />
             ))}

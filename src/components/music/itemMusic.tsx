@@ -1,38 +1,47 @@
-"use client";
+'use client'
 
-import { formatTime } from "@/utils/msToMinuteAndSecond";
-import { SetStateAction, useState } from "react";
-import { Button } from "../ui/button";
+import { formatTime } from '@/utils/msToMinuteAndSecond'
+import { SetStateAction, useState } from 'react'
+import { Button } from '../ui/button'
 
 interface ItemMusicProps {
-  name: string;
-  durationMs: number;
-  musicId: string;
-  setSelectedMusic: React.Dispatch<SetStateAction<string[]>>;
-  selectedMusics: string[];
+  name: string
+  durationMs: number
+  musicId: string
+  setSelectedMusic: React.Dispatch<SetStateAction<string[]>>
+  selectedMusics: string[]
+  setLastSelectedMusic: React.Dispatch<SetStateAction<string>>
 }
 
 export default function ItemMusic(musics: ItemMusicProps) {
-  const { name, durationMs, musicId, selectedMusics, setSelectedMusic } =
-    musics;
+  const {
+    name,
+    durationMs,
+    musicId,
+    selectedMusics,
+    setSelectedMusic,
+    setLastSelectedMusic,
+  } = musics
 
-  const checked = selectedMusics.includes(musicId);
-  const [check, setCheck] = useState(checked);
+  const checked = selectedMusics.includes(musicId)
+  const [check, setCheck] = useState(checked)
 
-  function changeMusicList(id: string) {
-    setCheck(!check);
+  function changeMusicList(id: string, name: string) {
+    setCheck(!check)
+
+    setLastSelectedMusic(name)
 
     if (selectedMusics.includes(id)) {
-      setSelectedMusic(selectedMusics.filter((musicId) => musicId !== id));
+      setSelectedMusic(selectedMusics.filter((musicId) => musicId !== id))
     } else {
-      setSelectedMusic([...selectedMusics, id]);
+      setSelectedMusic([...selectedMusics, id])
     }
   }
 
   return (
     <Button
       className="flex px-15 py-6 rounded-none w-full text-start bg-transparent shadow-none hover:bg-white/30 transform duration-300 cursor-pointer items-center"
-      onClick={() => changeMusicList(musicId)}
+      onClick={() => changeMusicList(musicId, name)}
     >
       <div className="w-1/12 h-full flex items-center">
         <input
@@ -52,5 +61,5 @@ export default function ItemMusic(musics: ItemMusicProps) {
         {formatTime(durationMs)}
       </span>
     </Button>
-  );
+  )
 }
