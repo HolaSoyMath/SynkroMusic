@@ -40,6 +40,7 @@ export default function ItemMusic(musics: ItemMusicProps) {
 
   useEffect(() => {
     setLastSelectedMusic('Nenhuma música selecionada')
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

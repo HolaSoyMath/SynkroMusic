@@ -43,6 +43,7 @@ export default function PlaylistCarousel() {
     }
 
     getPlaylists()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session])
 
   return (
