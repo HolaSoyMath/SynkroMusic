@@ -1,19 +1,19 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { Button } from "../ui/button";
-import { Pause, Play } from "lucide-react";
-import { formatTime } from "@/utils/msToMinuteAndSecond";
-import { Slider } from "../ui/slider";
+import { useState } from 'react'
+import { Button } from '../ui/button'
+import { Pause, Play } from 'lucide-react'
+import { msToMinAndSeconds } from '@/utils/msToMinuteAndSecond'
+import { Slider } from '../ui/slider'
 
 interface PlayInstrumentProps {
-  name: string;
+  name: string
 }
 
 export default function PlayInstrument(props: PlayInstrumentProps) {
-  const { name } = props;
+  const { name } = props
 
-  const [play, setPlay] = useState(true);
+  const [play, setPlay] = useState(true)
 
   return (
     <div className="flex items-center px-10 py-4 bg-white/30 w-full h-1/2 gap-4">
@@ -27,14 +27,10 @@ export default function PlayInstrument(props: PlayInstrumentProps) {
         {play && <Play className="fill-background" />}
         {!play && <Pause className="fill-background" />}
       </Button>
-      <Slider
-        defaultValue={[0]}
-        max={100}
-        step={1}
-      />
+      <Slider defaultValue={[0]} max={100} step={1} />
       <span className=" text-right uppercase text-xs tracking-[.08em] text-background w-2/12">
-        {formatTime(165478)}
+        {msToMinAndSeconds(165478)}
       </span>
     </div>
-  );
+  )
 }

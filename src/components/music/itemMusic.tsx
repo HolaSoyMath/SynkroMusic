@@ -1,7 +1,7 @@
 'use client'
 
-import { formatTime } from '@/utils/msToMinuteAndSecond'
-import { SetStateAction, useState } from 'react'
+import { msToMinAndSeconds } from '@/utils/msToMinuteAndSecond'
+import { SetStateAction, useEffect, useState } from 'react'
 import { Button } from '../ui/button'
 
 interface ItemMusicProps {
@@ -38,6 +38,10 @@ export default function ItemMusic(musics: ItemMusicProps) {
     }
   }
 
+  useEffect(() => {
+    setLastSelectedMusic('Nenhuma música selecionada')
+  }, [])
+
   return (
     <Button
       className="flex px-15 py-6 rounded-none w-full text-start bg-transparent shadow-none hover:bg-white/30 transform duration-300 cursor-pointer items-center"
@@ -58,7 +62,7 @@ export default function ItemMusic(musics: ItemMusicProps) {
         {name}
       </span>
       <span className="uppercase text-xs tracking-[.08em] text-background w-1/12">
-        {formatTime(durationMs)}
+        {msToMinAndSeconds(durationMs)}
       </span>
     </Button>
   )

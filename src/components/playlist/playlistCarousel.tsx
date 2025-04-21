@@ -8,18 +8,13 @@ import { useSession } from 'next-auth/react'
 import { useSpotifyApi } from '@/app/api/apiSpotify'
 import SkeletonPlaylistImage from '../skeleton/playlistImage'
 import { Skeleton } from '../ui/skeleton'
-
-interface UserPlaylistInterface {
-  id: string
-  image: string
-  name: string
-}
+import PlaylistInfosInterface from '@/interface/PlaylistInfos'
 
 export default function PlaylistCarousel() {
   const { data: session } = useSession()
-  const api = useSpotifyApi()
   const [isLoading, setIsLoading] = useState(true)
-  const [userPlaylists, setUserPlaylists] = useState<UserPlaylistInterface[]>(
+  const api = useSpotifyApi()
+  const [userPlaylists, setUserPlaylists] = useState<PlaylistInfosInterface[]>(
     [],
   )
 
@@ -31,10 +26,12 @@ export default function PlaylistCarousel() {
         const { data } = await api.get(`/users/${userId}/playlists`)
 
         const playlists = data.items.map(
-          (item: { id: string; images: { url: string }[]; name: string }) => ({
+          (item: { id: string; images: { url: string }[]; name: string; tracks: {href: string, total: number} }): PlaylistInfosInterface => ({
             id: item.id,
             image: item.images[0].url,
             name: item.name,
+            quantity:item.tracks.total,
+            duration_ms: 6584
           }),
         )
 

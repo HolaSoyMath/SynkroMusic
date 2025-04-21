@@ -12,7 +12,7 @@ import LogoutButton from "../logoutButton";
 
 export default function HomeTemplate() {
   const [selectedMusics, setSelectedMusics] = useState<string[]>([]);
-  const [lastSlectedMusic, setLastSelectedMusic] = useState('')
+  const [lastSelectedMusic, setLastSelectedMusic] = useState('')
 
   const tracks = musicPLaylist.tracks.items;
 
@@ -39,7 +39,7 @@ export default function HomeTemplate() {
               <LogoutButton />
             </div>
           <div className="flex-none h-2/12 flex items-center px-15">
-            <p className="text-3xl font-bold text-background">{lastSlectedMusic}</p>
+            <p className="text-3xl font-bold text-background">{lastSelectedMusic}</p>
           </div>
 
           <div className="flex-1 overflow-y-scroll">
