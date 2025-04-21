@@ -72,20 +72,19 @@ export default function PlaylistCarousel({
 
   async function selectedPlaylist(id: string, image: string, name: string) {
     const { data } = await api.get(`/playlists/${id}/tracks`)
-    const totalDurationMs = sumMsDurationPlaylist(data.items)
-    const quantity = data.total
-
-    console.log('data:', data)
 
     // @ts-expect-error - O "item" nao tem uma interface criada, por isso apresentará um erro, mas está ok
-    const listTracks: SpotifyTrack[] = data.items.map(item => {
+    const listTracks: SpotifyTrack[] = data.items.map((item) => {
       return {
         id: item.track.id,
         name: item.track.name,
         duration_ms: item.track.duration_ms,
-        image: item.track.album.images[0].url
+        image: item.track.album.images[0].url,
       }
     })
+
+    const totalDurationMs = sumMsDurationPlaylist(listTracks)
+    const quantity = data.total
 
     setUserPlaylist({
       id: id,

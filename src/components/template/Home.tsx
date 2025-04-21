@@ -6,7 +6,7 @@ import PlaylistCarousel from '../playlist/playlistCarousel'
 import PlaylistInfo from '../playlist/playlistInfo'
 import VinylCover from '../playlist/vinylCover'
 import PlayInstrument from '../music/playInstrument'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import LogoutButton from '../logoutButton'
 import PlaylistInfosInterface from '@/interface/PlaylistInfos'
 import { msToHourAndMinute } from '@/utils/msToHourAndMinute'
@@ -17,11 +17,6 @@ export default function HomeTemplate() {
   const [userPlaylist, setUserPlaylist] =
     useState<PlaylistInfosInterface | null>(null)
   const [backgroundImage, setBackgroundImage] = useState('')
-
-  useEffect(() => {
-    console.log("tracks:", userPlaylist);
-
-  }, [userPlaylist])
 
   return (
     <div className="w-full h-full flex">

@@ -1,7 +1,9 @@
-import { PlaylistTrackItem } from '@/interface/SpotifyTrack'
+import { SpotifyTrack } from '@/interface/SpotifyTrack'
 
-export function sumMsDurationPlaylist(tracks: PlaylistTrackItem[]) {
+export function sumMsDurationPlaylist(tracks: SpotifyTrack[]) {
+  console.log("tracks:", tracks);
+  
   return tracks.reduce((sum, track) => {
-    return sum + track.track.duration_ms
+    return sum + track.duration_ms
   }, 0)
 }
