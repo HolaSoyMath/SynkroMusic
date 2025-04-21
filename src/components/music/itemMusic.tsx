@@ -8,9 +8,11 @@ interface ItemMusicProps {
   name: string
   durationMs: number
   musicId: string
+  image: string
   setSelectedMusic: React.Dispatch<SetStateAction<string[]>>
   selectedMusics: string[]
   setLastSelectedMusic: React.Dispatch<SetStateAction<string>>
+  setBackgroundImage: React.Dispatch<React.SetStateAction<string>>
 }
 
 export default function ItemMusic(musics: ItemMusicProps) {
@@ -18,15 +20,17 @@ export default function ItemMusic(musics: ItemMusicProps) {
     name,
     durationMs,
     musicId,
+    image,
     selectedMusics,
     setSelectedMusic,
     setLastSelectedMusic,
+    setBackgroundImage
   } = musics
 
   const checked = selectedMusics.includes(musicId)
   const [check, setCheck] = useState(checked)
 
-  function changeMusicList(id: string, name: string) {
+  function changeMusicList(id: string, name: string, image: string) {
     setCheck(!check)
 
     setLastSelectedMusic(name)
@@ -36,6 +40,8 @@ export default function ItemMusic(musics: ItemMusicProps) {
     } else {
       setSelectedMusic([...selectedMusics, id])
     }
+
+    setBackgroundImage(image)
   }
 
   useEffect(() => {
@@ -46,7 +52,7 @@ export default function ItemMusic(musics: ItemMusicProps) {
   return (
     <Button
       className="flex px-15 py-6 rounded-none w-full text-start bg-transparent shadow-none hover:bg-white/30 transform duration-300 cursor-pointer items-center"
-      onClick={() => changeMusicList(musicId, name)}
+      onClick={() => changeMusicList(musicId, name, image)}
     >
       <div className="w-1/12 h-full flex items-center">
         <input

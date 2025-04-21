@@ -1,11 +1,15 @@
-import Image from "next/image";
-import ImageSelectedMusic from "../imageSelectedMusic";
+import Image from 'next/image'
+import ImageSelectedMusic from '../imageSelectedMusic'
 
-export default function VinylCover() {
+interface VinylCoverProps{
+  image: string
+}
+
+export default function VinylCover({ image }: VinylCoverProps) {
   return (
     <div className="relative">
       <div className="absolute w-[204px] h-full">
-        <ImageSelectedMusic />
+        <ImageSelectedMusic image={image} />
       </div>
       <Image
         src={"/image-music.png"}
@@ -14,5 +18,5 @@ export default function VinylCover() {
         height={100}
       />
     </div>
-  );
+  )
 }
