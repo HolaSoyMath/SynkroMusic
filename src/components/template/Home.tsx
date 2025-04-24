@@ -26,7 +26,7 @@ export default function HomeTemplate() {
             image={backgroundImage ? backgroundImage : '/loading.svg'}
           />
         </div>
-        <div className="h-1/2 pt-7 flex flex-col ">
+        <div className="h-1/2 pt-7 flex flex-col">
           <PlaylistInfo
             name={userPlaylist ? userPlaylist.name : ''}
             quantity={userPlaylist ? userPlaylist.quantity : 0}
@@ -37,7 +37,7 @@ export default function HomeTemplate() {
             }
           />
           <div className=" w-full h-7/12 pl-10 flex flex-col justify-end pb-3">
-            <p className="uppercase text-xs tracking-[.08em] mb-5 text-background">
+            <p className="uppercase text-xs tracking-[.08em] mb-5 text-background text-xs sm:mb-1 2xl:mb-4">
               Outras playlists
             </p>
             <PlaylistCarousel

@@ -18,7 +18,7 @@ export default function PlaylistInfo(infos: PlaylistInfoProps) {
   return (
     <div className="flex w-full h-5/12 px-12">
       <div className="w-2/3">
-        <h2 className="font-bold mb-4 text-3xl">{name}</h2>
+        <h2 className="font-bold sm:text-md sm:mb-1 2xl:mb-4 2xl:text-3xl">{name}</h2>
         <p className="uppercase text-xs tracking-[.08em]">
           {quantity} músicas, {time}
         </p>
