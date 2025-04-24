@@ -69,6 +69,7 @@ export default function HomeTemplate() {
                 durationMs={track.duration_ms}
                 musicId={track.id}
                 image={track.image}
+                artist={track.artist}
                 downloaded={false}
                 setSelectedMusic={setSelectedMusics}
                 selectedMusics={selectedMusics}

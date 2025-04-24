@@ -10,6 +10,7 @@ interface ItemMusicProps {
   durationMs: number
   musicId: string
   image: string
+  artist: string
   downloaded: boolean
   setSelectedMusic: React.Dispatch<SetStateAction<string[]>>
   selectedMusics: string[]
@@ -23,6 +24,7 @@ export default function ItemMusic(musics: ItemMusicProps) {
     durationMs,
     musicId,
     image,
+    artist,
     downloaded,
     selectedMusics,
     setSelectedMusic,
@@ -74,7 +76,7 @@ export default function ItemMusic(musics: ItemMusicProps) {
       </div>
 
       <span className="uppercase text-xs tracking-[.08em] text-background w-10/12 line-clamp-1">
-        {name}
+        {name} - {artist}
       </span>
       <span className="uppercase text-xs tracking-[.08em] text-background w-1/12">
         {msToMinAndSeconds(durationMs)}

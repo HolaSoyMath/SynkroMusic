@@ -78,6 +78,7 @@ export default function PlaylistCarousel({
       return {
         id: item.track.id,
         name: item.track.name,
+        artist: item.track.album.artists[0].name,
         duration_ms: item.track.duration_ms,
         image: item.track.album.images[0].url,
       }
