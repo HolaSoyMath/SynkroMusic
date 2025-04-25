@@ -37,7 +37,7 @@ export default function HomeTemplate() {
             }
           />
           <div className=" w-full h-7/12 pl-10 flex flex-col justify-end pb-3">
-            <p className="uppercase text-xs tracking-[.08em] mb-5 text-background text-xs sm:mb-1 2xl:mb-4">
+            <p className="uppercase tracking-[.08em] mb-5 text-background text-xs sm:mb-1 2xl:mb-4">
               Outras playlists
             </p>
             <PlaylistCarousel
@@ -62,7 +62,7 @@ export default function HomeTemplate() {
             </p>
           </div>
 
-          <div className="flex-1 overflow-y-scroll">
+          <div className="overflow-y-scroll flex-1">
             {userPlaylist?.tracks && userPlaylist.tracks.map((track) => (
               <ItemMusic
                 name={track.name}
