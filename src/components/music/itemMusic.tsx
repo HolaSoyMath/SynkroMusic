@@ -15,7 +15,7 @@ interface ItemMusicProps {
   downloaded: boolean;
   setSelectedMusic: React.Dispatch<SetStateAction<string[]>>;
   selectedMusics: string[];
-  setLastSelectedMusic: React.Dispatch<SetStateAction<string>>;
+  setLastSelectedMusic: React.Dispatch<SetStateAction<{ music: string, artist: string }>>;
   setBackgroundImage: React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -40,7 +40,7 @@ export default function ItemMusic(musics: ItemMusicProps) {
   function changeMusicList(id: string, name: string, image: string) {
     setCheck(!check);
 
-    setLastSelectedMusic(name);
+    setLastSelectedMusic({music: name, artist: artist});
 
     if (selectedMusics.includes(id)) {
       setSelectedMusic(selectedMusics.filter((musicId) => musicId !== id));
@@ -52,7 +52,7 @@ export default function ItemMusic(musics: ItemMusicProps) {
   }
 
   useEffect(() => {
-    setLastSelectedMusic("Nenhuma música selecionada");
+    setLastSelectedMusic({music: "Nenhuma música selecionada", artist: ''});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
