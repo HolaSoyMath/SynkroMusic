@@ -1,60 +1,55 @@
-"use client";
+'use client'
 
-import { msToMinAndSeconds } from "@/utils/msToMinuteAndSecond";
-import { SetStateAction, useEffect, useState } from "react";
-import { Button } from "../ui/button";
-import { Check } from "lucide-react";
-import AnimatedParagraph from "../animatedParagraph";
+import { msToMinAndSeconds } from '@/utils/msToMinuteAndSecond'
+import { useContext, useEffect, useState } from 'react'
+import { Button } from '../ui/button'
+import { Check } from 'lucide-react'
+import AnimatedParagraph from '../animatedParagraph'
+import { HomeContext } from '@/context/HomeContext'
 
 interface ItemMusicProps {
-  name: string;
-  durationMs: number;
-  musicId: string;
-  image: string;
-  artist: string;
-  downloaded: boolean;
-  setSelectedMusic: React.Dispatch<SetStateAction<string[]>>;
-  selectedMusics: string[];
-  setLastSelectedMusic: React.Dispatch<SetStateAction<{ music: string, artist: string }>>;
-  setBackgroundImage: React.Dispatch<React.SetStateAction<string>>;
+  name: string
+  durationMs: number
+  musicId: string
+  image: string
+  artist: string
+  downloaded: boolean
 }
 
 export default function ItemMusic(musics: ItemMusicProps) {
   const {
-    name,
-    durationMs,
-    musicId,
-    image,
-    artist,
-    downloaded,
-    selectedMusics,
+    selectedMusic,
     setSelectedMusic,
-    setLastSelectedMusic,
     setBackgroundImage,
-  } = musics;
+    setLastSelectedMusic,
+  } = useContext(HomeContext)
 
-  const checked = selectedMusics.includes(musicId);
-  const [check, setCheck] = useState(checked);
+  const { name, durationMs, musicId, image, artist, downloaded } = musics
+
+  const checked = selectedMusic.includes(musicId)
+  const [check, setCheck] = useState(checked)
   const [hovered, setHovered] = useState(false)
 
   function changeMusicList(id: string, name: string, image: string) {
-    setCheck(!check);
+    setCheck(!check)
 
-    setLastSelectedMusic({music: name, artist: artist});
+    setLastSelectedMusic({ music: name, artist: artist })
 
-    if (selectedMusics.includes(id)) {
-      setSelectedMusic(selectedMusics.filter((musicId) => musicId !== id));
+    if (selectedMusic.includes(id)) {
+      setSelectedMusic(
+        selectedMusic.filter((musicId: string) => musicId !== id),
+      )
     } else {
-      setSelectedMusic([...selectedMusics, id]);
+      setSelectedMusic([...selectedMusic, id])
     }
 
-    setBackgroundImage(image);
+    setBackgroundImage(image)
   }
 
   useEffect(() => {
-    setLastSelectedMusic({music: "Nenhuma música selecionada", artist: ''});
+    setLastSelectedMusic({ music: 'Nenhuma música selecionada', artist: '' })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [])
 
   return (
     <Button
@@ -71,8 +66,8 @@ export default function ItemMusic(musics: ItemMusicProps) {
           onChange={() => setCheck(!check)}
           color="red"
           className={`w-4 h-4 appearance-none cursor-pointer border-1 border-background transition-all duration-300 rounded-sm 
-            ${check && "checked:bg-background"} 
-            ${downloaded && "rounded-full bg-green-600 border-green-600"}
+            ${check && 'checked:bg-background'} 
+            ${downloaded && 'rounded-full bg-green-600 border-green-600'}
             `}
         />
         {check && <Check className="text-foreground absolute" size={2} />}
@@ -87,5 +82,5 @@ export default function ItemMusic(musics: ItemMusicProps) {
         {msToMinAndSeconds(durationMs)}
       </span>
     </Button>
-  );
+  )
 }

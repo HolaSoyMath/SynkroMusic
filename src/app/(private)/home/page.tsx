@@ -1,15 +1,18 @@
-import HomeTemplate from "@/components/template/Home";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
+import HomeTemplate from '@/components/template/Home'
+import { HomeProvider } from '@/context/HomeContext'
+import { getServerSession } from 'next-auth'
+import { redirect } from 'next/navigation'
 
-export default async function HomePage(){
-  const session = await getServerSession();
+export default async function HomePage() {
+  const session = await getServerSession()
 
   if (!session) {
-    redirect("/")
+    redirect('/')
   }
 
-  return(
-    <HomeTemplate />
+  return (
+    <HomeProvider>
+      <HomeTemplate />
+    </HomeProvider>
   )
 }

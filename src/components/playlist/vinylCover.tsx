@@ -1,15 +1,11 @@
 import Image from 'next/image'
 import ImageSelectedMusic from '../imageSelectedMusic'
 
-interface VinylCoverProps{
-  image: string
-}
-
-export default function VinylCover({ image }: VinylCoverProps) {
+export default function VinylCover() {
   return (
     <div className="relative">
       <div className="absolute w-[204px] h-full">
-        <ImageSelectedMusic image={image} />
+        <ImageSelectedMusic />
       </div>
       <Image
         src={"/image-music.png"}
