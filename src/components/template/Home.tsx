@@ -1,101 +1,89 @@
-"use client";
+'use client'
 
-import ImageSelectedMusic from "../imageSelectedMusic";
-import ItemMusic from "../music/itemMusic";
-import PlaylistCarousel from "../playlist/playlistCarousel";
-import PlaylistInfo from "../playlist/playlistInfo";
-import VinylCover from "../playlist/vinylCover";
-import PlayInstrument from "../music/playInstrument";
-import { useState } from "react";
-import LogoutButton from "../logoutButton";
-import PlaylistInfosInterface from "@/interface/PlaylistInfos";
-import { msToHourAndMinute } from "@/utils/msToHourAndMinute";
+import ImageSelectedMusic from '../imageSelectedMusic'
+import ItemMusic from '../music/itemMusic'
+import PlaylistCarousel from '../playlist/playlistCarousel'
+import PlaylistInfo from '../playlist/playlistInfo'
+import VinylCover from '../playlist/vinylCover'
+import PlayInstrument from '../music/playInstrument'
+import { useContext } from 'react'
+import LogoutButton from '../logoutButton'
+import { msToHourAndMinute } from '@/utils/msToHourAndMinute'
+import { HomeContext } from '@/context/HomeContext'
+import { SpotifyTrack } from '@/interface/SpotifyTrack'
+import LoadingPulseLogo from './loadingPlaylist/LoadingPulseLogo'
+import { usePlaylists } from '@/hooks/usePlaylists'
 
 export default function HomeTemplate() {
-  const [selectedMusics, setSelectedMusics] = useState<string[]>([]);
-  const [lastSelectedMusic, setLastSelectedMusic] = useState<{
-    music: string;
-    artist: string;
-  }>({
-    music: "",
-    artist: "",
-  });
-  const [userPlaylist, setUserPlaylist] =
-    useState<PlaylistInfosInterface | null>(null);
-  const [backgroundImage, setBackgroundImage] = useState("");
+  const { lastSelectedMusic, userPlaylist, isLoading } = useContext(HomeContext)
+  usePlaylists()
 
-  return (
-    <div className="w-full h-full flex">
-      <section className="h-full w-1/2 bg-foreground text-background">
-        <div className="h-1/2 bg-background flex justify-center items-center">
-          <VinylCover
-            image={backgroundImage ? backgroundImage : "/loading.svg"}
-          />
-        </div>
-        <div className="h-1/2 pt-7 flex flex-col">
-          <PlaylistInfo
-            name={userPlaylist ? userPlaylist.name : ""}
-            quantity={userPlaylist ? userPlaylist.quantity : 0}
-            time={
-              userPlaylist
-                ? msToHourAndMinute(userPlaylist.duration_ms ?? 0)
-                : "00h00m"
-            }
-          />
-          <div className=" w-full h-7/12 pl-10 flex flex-col justify-end pb-3">
-            <p className="uppercase tracking-[.08em] mb-5 text-background text-xs sm:mb-1 2xl:mb-4">
-              Outras playlists
-            </p>
-            <PlaylistCarousel
-              setUserPlaylist={setUserPlaylist}
-              setBackgroundImage={setBackgroundImage}
+  if (isLoading) {
+    return(
+      <LoadingPulseLogo />
+    )
+  } else {
+    return (
+      <div className="w-full h-full flex">
+        <section className="h-full w-1/2 bg-foreground text-background">
+          <div className="h-1/2 bg-background flex justify-center items-center">
+            <VinylCover />
+          </div>
+          <div className="h-1/2 pt-7 flex flex-col">
+            <PlaylistInfo
+              name={userPlaylist ? userPlaylist.name : ''}
+              quantity={userPlaylist ? userPlaylist.quantity : 0}
+              time={
+                userPlaylist
+                  ? msToHourAndMinute(userPlaylist.duration_ms ?? 0)
+                  : '00h00m'
+              }
             />
+            <div className=" w-full h-7/12 pl-10 flex flex-col justify-end pb-3">
+              <p className="uppercase tracking-[.08em] mb-5 text-background text-xs sm:mb-1 2xl:mb-4">
+                Outras playlists
+              </p>
+              <PlaylistCarousel />
+            </div>
           </div>
-        </div>
-      </section>
-      <section className="relative h-full w-1/2 overflow-hidden">
-        <ImageSelectedMusic
-          image={backgroundImage ? backgroundImage : "/loading.svg"}
-          className="blur-xl object-cover"
-        />
-        <div className="absolute inset-0 flex flex-col bg-white/60 ">
-          <div className="fixed right-2 top-2">
-            <LogoutButton />
-          </div>
-          <div className="h-2/12 flex flex-col px-15 justify-center">
-            <p className="text-3xl font-bold text-background text-start line-clamp-2 mb-3">
-              {lastSelectedMusic.music}
-            </p>
-            <p className="text-sm font-normal text-background/70">
-              {lastSelectedMusic.artist}
-            </p>
-          </div>
+        </section>
+        <section className="relative h-full w-1/2 overflow-hidden">
+          <ImageSelectedMusic className="blur-xl object-cover" />
+          <div className="absolute inset-0 flex flex-col bg-white/60 ">
+            <div className="fixed right-2 top-2">
+              <LogoutButton />
+            </div>
+            <div className="h-2/12 flex flex-col px-15 justify-center">
+              <p className="text-3xl font-bold text-background text-start line-clamp-2 mb-3">
+                {lastSelectedMusic.music}
+              </p>
+              <p className="text-sm font-normal text-background/70">
+                {lastSelectedMusic.artist}
+              </p>
+            </div>
 
-          <div className="overflow-y-scroll flex-1">
-            {userPlaylist?.tracks &&
-              userPlaylist.tracks.map((track) => (
-                <ItemMusic
-                  name={track.name}
-                  durationMs={track.duration_ms}
-                  musicId={track.id}
-                  image={track.image}
-                  artist={track.artist}
-                  downloaded={false}
-                  setSelectedMusic={setSelectedMusics}
-                  selectedMusics={selectedMusics}
-                  setLastSelectedMusic={setLastSelectedMusic}
-                  setBackgroundImage={setBackgroundImage}
-                  key={track.id}
-                />
-              ))}
-          </div>
+            <div className="overflow-y-scroll flex-1">
+              {userPlaylist?.tracks &&
+                userPlaylist.tracks.map((track: SpotifyTrack) => (
+                  <ItemMusic
+                    name={track.name}
+                    durationMs={track.duration_ms}
+                    musicId={track.id}
+                    image={track.image}
+                    artist={track.artist}
+                    downloaded={false}
+                    key={track.id}
+                  />
+                ))}
+            </div>
 
-          <div className="flex-none h-1.5/12 bg-white/30">
-            <PlayInstrument name="Vocal" />
-            <PlayInstrument name="Instrumentos" />
+            <div className="flex-none h-1.5/12 bg-white/30">
+              <PlayInstrument name="Vocal" />
+              <PlayInstrument name="Instrumentos" />
+            </div>
           </div>
-        </div>
-      </section>
-    </div>
-  );
+        </section>
+      </div>
+    )
+  }
 }

@@ -19,13 +19,6 @@ export default function AnimatedParagraph(props: AnimatedParagraphProps) {
       const textWidth = textRef.current.offsetWidth;
       const divWidth = divRef.current.offsetWidth;
 
-      console.log("nome:", name);
-      console.log("textWidth:", textWidth);
-      console.log("divWidth:", divWidth);
-      console.log("porcentagem 1:", `-${((textWidth / divWidth) * 100)}%`);
-      console.log("porcentagem 2:", `-${((textWidth / divWidth) * 100) + 10}%`);
-      
-      
       setIsTextLongEnough(textWidth > divWidth);
       setAnimationEndPercentage(`-${((textWidth / divWidth) * 100) + 20}%`)
     }
