@@ -3,7 +3,7 @@ import PulseLogo from "./PulseLogo";
 
 export default function LoadingPulseLogo() {
 
-  const duration = 1500
+  const duration = 1000
 
   return (
     <div className="relative">

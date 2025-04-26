@@ -15,7 +15,6 @@ export default function PulseLogo(props: PulseLogoProps) {
     animate(".logo", {
       scale: [
         { to: 2, duration: duration, ease: "inOut" },
-        { to: 2, duration: 200 },
         { to: 1, duration: duration, ease: "inOut" },
         { to: 1, duration: 2000 },
       ],
