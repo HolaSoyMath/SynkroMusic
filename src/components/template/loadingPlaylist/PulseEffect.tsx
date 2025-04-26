@@ -44,12 +44,11 @@ export default function PulseEffect(props: PulseEffectProps) {
       const x = index % gridData.cols;
       const y = Math.floor(index / gridData.cols);
       const distance = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
-      const delay = distance * 700;
+      const delay = (distance * 700) + duration;
 
       animate(dot, {
         scale: [
           { to: 20, duration: duration, ease: "inOut" },
-          { to: 20, duration: 200 },
           { to: 0, duration: duration, ease: "inOut" },
           { to: 0, duration: 2000 },
         ],
