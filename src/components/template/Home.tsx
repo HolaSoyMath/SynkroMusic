@@ -6,22 +6,61 @@ import PlaylistCarousel from '../playlist/playlistCarousel'
 import PlaylistInfo from '../playlist/playlistInfo'
 import VinylCover from '../playlist/vinylCover'
 import PlayInstrument from '../music/playInstrument'
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import LogoutButton from '../logoutButton'
 import { msToHourAndMinute } from '@/utils/msToHourAndMinute'
 import { HomeContext } from '@/context/HomeContext'
 import { SpotifyTrack } from '@/interface/SpotifyTrack'
 import LoadingPulseLogo from './loadingPlaylist/LoadingPulseLogo'
 import { usePlaylists } from '@/hooks/usePlaylists'
+import { useSynkroApi } from '@/app/api/apiSynkro'
+import { useSearchParams } from 'next/navigation'
+import { saveLocalStorage } from '@/utils/saveLocalStorage'
 
 export default function HomeTemplate() {
+  const [spotifyToken, setSpotifyToken] = useState<string | null>(null)
   const { lastSelectedMusic, userPlaylist, isLoading } = useContext(HomeContext)
-  usePlaylists()
+  const sessionId = useSearchParams().get('sessionId')
+  const api = useSynkroApi()
+
+  useEffect(() => {
+    async function getTokens() {
+      const resp = await api.get('/auth/get-token-by-cache', {
+        params: { sessionId: sessionId },
+      })
+      await saveLocalStorage(
+        'spotifyAccessToken',
+        resp.data.spotifyTokenInfo.accessToken,
+      )
+      await saveLocalStorage(
+        'spotifyRefreshToken',
+        resp.data.spotifyTokenInfo.refreshToken,
+      )
+      await saveLocalStorage(
+        'spotifyExpiresAccessToken',
+        Date.now() + resp.data.spotifyTokenInfo.expiresIn,
+      )
+
+      await saveLocalStorage(
+        'internalAccessToken',
+        resp.data.internalTokenInfo.accessToken,
+      )
+      await saveLocalStorage(
+        'internalExpiresAccessToken',
+        Date.now() + resp.data.internalTokenInfo.expiresIn,
+      )
+
+      setSpotifyToken(resp.data.spotifyTokenInfo.accessToken)
+
+      return
+    }
+    getTokens()
+  }, [])
+
+  usePlaylists(spotifyToken)
 
   if (isLoading) {
-    return(
-      <LoadingPulseLogo />
-    )
+    return <LoadingPulseLogo />
   } else {
     return (
       <div className="w-full h-full flex">

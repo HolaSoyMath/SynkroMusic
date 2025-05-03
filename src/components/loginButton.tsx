@@ -1,14 +1,18 @@
 'use client'
 
-import { signIn } from "next-auth/react"
-import { Button } from "./ui/button"
-import Image from "next/image"
+// import { signIn } from "next-auth/react"
+import { Button } from './ui/button'
+import Image from 'next/image'
 
 export default function LoginButton() {
+  function signIn() {
+    window.location.href = 'https://music-api-integration.onrender.com/api/auth/login'
+    return
+  }
   return (
     <Button
       className="w-full rounded-full bg-transparent border-1 border-white text-foreground cursor-pointer px-0 py-5 relative hover:bg-primary/20"
-      onClick={() => signIn('spotify', { callbackUrl: '/home' })}
+      onClick={() => signIn()}
     >
       <Image
         src={'/spotify-logo.svg'}

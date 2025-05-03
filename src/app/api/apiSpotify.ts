@@ -1,9 +1,8 @@
+import { getLocalStorage } from '@/utils/getLocalStorage'
 import axios from 'axios'
-import { useSession } from 'next-auth/react'
 
 export function useSpotifyApi() {
-  const { data: session } = useSession()
-  const accessToken = session?.token.access_token ?? ''
+  const accessToken = getLocalStorage('spotifyAccessToken')
 
   return axios.create({
     baseURL: 'https://api.spotify.com/v1',
