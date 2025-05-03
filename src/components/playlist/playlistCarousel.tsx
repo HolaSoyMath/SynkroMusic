@@ -4,16 +4,16 @@ import { Card, CardContent } from '../ui/card'
 import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel'
 import Image from 'next/image'
 import React, { useContext, useEffect } from 'react'
-import { useSpotifyApi } from '@/app/api/apiSpotify'
+import { apiSpotify } from '@/app/api/apiSpotify'
 import SkeletonPlaylistImage from '../skeleton/playlistImage'
 import { Skeleton } from '../ui/skeleton'
-import { sumMsDurationPlaylist } from '@/utils/sumMsDurationPlaylist'
+import { sumMsDurationPlaylist } from '@/functions/sumMsDurationPlaylist'
 import { SpotifyTrack } from '@/interface/SpotifyTrack'
 import { HomeContext } from '@/context/HomeContext'
 import PlaylistInfosInterface from '@/interface/PlaylistInfos'
 
 export default function PlaylistCarousel() {
-  const api = useSpotifyApi()
+  const api = apiSpotify()
   const { setBackgroundImage, setUserPlaylist, isLoading, userPlaylists } =
     useContext(HomeContext)
 
@@ -46,9 +46,12 @@ export default function PlaylistCarousel() {
   }
 
   useEffect(() => {
-    const firstPlaylist = userPlaylists[0]
-    selectedPlaylist(firstPlaylist.id, firstPlaylist.image, firstPlaylist.name)
-  }, [isLoading])
+    if(userPlaylists.length > 0){
+      console.log('userPLaylist é assim:', userPlaylists)
+      const firstPlaylist = userPlaylists[0]
+      selectedPlaylist(firstPlaylist.id, firstPlaylist.image, firstPlaylist.name)
+    }
+  }, [userPlaylists])
 
   return (
     <Carousel>

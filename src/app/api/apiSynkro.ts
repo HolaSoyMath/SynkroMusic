@@ -1,7 +1,12 @@
 import axios from 'axios'
 
-export function useSynkroApi() {
-  const accessToken = window.localStorage.getItem('spotifyAccessToken')
+export function apiSynkro() {
+  let accessToken
+  try {
+    accessToken = window.localStorage.getItem('spotifyAccessToken')
+  } catch (error) {
+    accessToken = ''
+  }
 
   return axios.create({
     baseURL: 'https://music-api-integration.onrender.com/api',

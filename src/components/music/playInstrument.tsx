@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Button } from '../ui/button'
 import { Pause, Play } from 'lucide-react'
-import { msToMinAndSeconds } from '@/utils/msToMinuteAndSecond'
+import { msToMinAndSeconds } from '@/functions/msToMinuteAndSecond'
 import { Slider } from '../ui/slider'
 
 interface PlayInstrumentProps {

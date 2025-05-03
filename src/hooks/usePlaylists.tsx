@@ -1,12 +1,12 @@
 'use client'
 import { useEffect } from 'react'
-import { useSpotifyApi } from '@/app/api/apiSpotify'
+import { apiSpotify } from '@/app/api/apiSpotify'
 import { useContext } from 'react'
 import { HomeContext } from '@/context/HomeContext'
 import PlaylistInfosInterface from '@/interface/PlaylistInfos'
 
 export function usePlaylists(token: string | null) {
-  const api = useSpotifyApi()
+  const api = apiSpotify()
   const { setIsLoading, setUserPlaylists, setBackgroundImage } =
     useContext(HomeContext)
 
