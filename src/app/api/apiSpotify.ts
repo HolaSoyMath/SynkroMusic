@@ -1,8 +1,9 @@
-import { getLocalStorage } from '@/utils/getLocalStorage'
 import axios from 'axios'
+import Cookies from 'js-cookie'
 
 export function useSpotifyApi() {
-  const accessToken = getLocalStorage('spotifyAccessToken')
+
+  const accessToken = Cookies.get('spotifyAccessToken')
 
   return axios.create({
     baseURL: 'https://api.spotify.com/v1',

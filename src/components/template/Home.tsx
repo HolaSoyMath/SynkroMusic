@@ -6,58 +6,25 @@ import PlaylistCarousel from '../playlist/playlistCarousel'
 import PlaylistInfo from '../playlist/playlistInfo'
 import VinylCover from '../playlist/vinylCover'
 import PlayInstrument from '../music/playInstrument'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect } from 'react'
 import LogoutButton from '../logoutButton'
 import { msToHourAndMinute } from '@/utils/msToHourAndMinute'
 import { HomeContext } from '@/context/HomeContext'
 import { SpotifyTrack } from '@/interface/SpotifyTrack'
 import LoadingPulseLogo from './loadingPlaylist/LoadingPulseLogo'
 import { usePlaylists } from '@/hooks/usePlaylists'
-import { useSynkroApi } from '@/app/api/apiSynkro'
-import { useSearchParams } from 'next/navigation'
-import { saveLocalStorage } from '@/utils/saveLocalStorage'
+import Cookies from 'js-cookie'
 
 export default function HomeTemplate() {
-  const [spotifyToken, setSpotifyToken] = useState<string | null>(null)
   const { lastSelectedMusic, userPlaylist, isLoading } = useContext(HomeContext)
-  const sessionId = useSearchParams().get('sessionId')
-  const api = useSynkroApi()
+  const spotifyToken = Cookies.get('spotifyAccessToken')
+  usePlaylists(spotifyToken)
 
   useEffect(() => {
-    async function getTokens() {
-      const resp = await api.get('/auth/get-token-by-cache', {
-        params: { sessionId: sessionId },
-      })
-      await saveLocalStorage(
-        'spotifyAccessToken',
-        resp.data.spotifyTokenInfo.accessToken,
-      )
-      await saveLocalStorage(
-        'spotifyRefreshToken',
-        resp.data.spotifyTokenInfo.refreshToken,
-      )
-      await saveLocalStorage(
-        'spotifyExpiresAccessToken',
-        Date.now() + resp.data.spotifyTokenInfo.expiresIn,
-      )
-
-      await saveLocalStorage(
-        'internalAccessToken',
-        resp.data.internalTokenInfo.accessToken,
-      )
-      await saveLocalStorage(
-        'internalExpiresAccessToken',
-        Date.now() + resp.data.internalTokenInfo.expiresIn,
-      )
-
-      setSpotifyToken(resp.data.spotifyTokenInfo.accessToken)
-
-      return
+    if (!spotifyToken) {
+      window.location.replace('/home')
     }
-    getTokens()
-  }, [])
-
-  usePlaylists(spotifyToken)
+  }, [spotifyToken])
 
   if (isLoading) {
     return <LoadingPulseLogo />

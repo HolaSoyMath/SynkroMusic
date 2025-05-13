@@ -1,7 +1,9 @@
-import axios from 'axios'
+import axios from 'axios';
+import Cookies from 'js-cookie'
+
 
 export function useSynkroApi() {
-  const accessToken = window.localStorage.getItem('spotifyAccessToken')
+  const accessToken = Cookies.get('spotifyAccessToken');
 
   return axios.create({
     baseURL: 'https://music-api-integration.onrender.com/api',
@@ -10,5 +12,5 @@ export function useSynkroApi() {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${accessToken}`,
     },
-  })
+  });
 }

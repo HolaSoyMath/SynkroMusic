@@ -4,28 +4,19 @@ import { useSpotifyApi } from '@/app/api/apiSpotify'
 import { useContext } from 'react'
 import { HomeContext } from '@/context/HomeContext'
 import PlaylistInfosInterface from '@/interface/PlaylistInfos'
-import { getLocalStorage } from '@/utils/getLocalStorage'
 
-export function usePlaylists(token: string | null) {
+export function usePlaylists(token: string | undefined) {
   const api = useSpotifyApi()
   const { setIsLoading, setUserPlaylists, setBackgroundImage } =
     useContext(HomeContext)
 
-    console.log('TOKEN DO HOOKS', token)
-
   useEffect(() => {
     if (!token) return
     setIsLoading(true)
-    console.log('Entrou no use effect')
-    console.log(
-      'Toke local storage do spotify',
-      getLocalStorage('spotifyAccessToken'),
-    )
 
     async function load() {
       try {
-        const userId = await api.get('/me')
-        console.log('RESPOSTA DO USER ID BEM INTERESSANTE DE VDD MESMO', userId)
+        const userId = await (await api.get('/me')).data.id
 
         const { data } = await api.get(`/users/${userId}/playlists`)
         const playlists = await data.items.map(
