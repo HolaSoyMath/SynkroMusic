@@ -6,22 +6,28 @@ import PlaylistCarousel from '../playlist/playlistCarousel'
 import PlaylistInfo from '../playlist/playlistInfo'
 import VinylCover from '../playlist/vinylCover'
 import PlayInstrument from '../music/playInstrument'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import LogoutButton from '../logoutButton'
 import { msToHourAndMinute } from '@/utils/msToHourAndMinute'
 import { HomeContext } from '@/context/HomeContext'
 import { SpotifyTrack } from '@/interface/SpotifyTrack'
 import LoadingPulseLogo from './loadingPlaylist/LoadingPulseLogo'
 import { usePlaylists } from '@/hooks/usePlaylists'
+import Cookies from 'js-cookie'
 
 export default function HomeTemplate() {
   const { lastSelectedMusic, userPlaylist, isLoading } = useContext(HomeContext)
-  usePlaylists()
+  const spotifyToken = Cookies.get('spotifyAccessToken')
+  usePlaylists(spotifyToken)
+
+  useEffect(() => {
+    if (!spotifyToken) {
+      window.location.replace('/home')
+    }
+  }, [spotifyToken])
 
   if (isLoading) {
-    return(
-      <LoadingPulseLogo />
-    )
+    return <LoadingPulseLogo />
   } else {
     return (
       <div className="w-full h-full flex">

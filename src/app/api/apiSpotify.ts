@@ -1,9 +1,9 @@
 import axios from 'axios'
-import { useSession } from 'next-auth/react'
+import Cookies from 'js-cookie'
 
 export function useSpotifyApi() {
-  const { data: session } = useSession()
-  const accessToken = session?.token.access_token ?? ''
+
+  const accessToken = Cookies.get('spotifyAccessToken')
 
   return axios.create({
     baseURL: 'https://api.spotify.com/v1',
