@@ -17,41 +17,43 @@ export default function PlaylistCarousel() {
   const { setBackgroundImage, setUserPlaylist, isLoading, userPlaylists } =
     useContext(HomeContext)
 
-  async function selectedPlaylist(id: string, image: string, name: string) {
-    const { data } = await api.get(`/playlists/${id}/tracks`)
+  const selectedPlaylist = React.useCallback(
+    async (id: string, image: string, name: string) => {
+      const { data } = await api.get(`/playlists/${id}/tracks`)
 
-    // @ts-expect-error - O "item" nao tem uma interface criada, por isso apresentará um erro, mas está ok
-    const listTracks: SpotifyTrack[] = data.items.map((item) => {
-      return {
-        id: item.track.id,
-        name: item.track.name,
-        artist: item.track.album.artists[0].name,
-        duration_ms: item.track.duration_ms,
-        image: item.track.album.images[0].url,
-      }
-    })
+      // @ts-expect-error - O "item" nao tem uma interface criada, por isso apresentará um erro, mas está ok
+      const listTracks: SpotifyTrack[] = data.items.map((item) => {
+        return {
+          id: item.track.id,
+          name: item.track.name,
+          artist: item.track.album.artists[0].name,
+          duration_ms: item.track.duration_ms,
+          image: item.track.album.images[0].url,
+        }
+      })
 
-    const totalDurationMs = sumMsDurationPlaylist(listTracks)
-    const quantity = data.total
+      const totalDurationMs = sumMsDurationPlaylist(listTracks)
+      const quantity = data.total
 
-    setUserPlaylist({
-      id: id,
-      image: image,
-      name: name,
-      quantity: quantity,
-      duration_ms: totalDurationMs,
-      tracks: listTracks,
-    })
-    setBackgroundImage(image)
-  }
+      setUserPlaylist({
+        id: id,
+        image: image,
+        name: name,
+        quantity: quantity,
+        duration_ms: totalDurationMs,
+        tracks: listTracks,
+      })
+      setBackgroundImage(image)
+    },
+    [api, setUserPlaylist, setBackgroundImage],
+  )
 
   useEffect(() => {
-    if(userPlaylists.length > 0){
-      console.log('userPLaylist é assim:', userPlaylists)
-      const firstPlaylist = userPlaylists[0]
-      selectedPlaylist(firstPlaylist.id, firstPlaylist.image, firstPlaylist.name)
-    }
-  }, [userPlaylists])
+    console.log('userPlaylists:', userPlaylists)
+
+    const firstPlaylist = userPlaylists[0]
+    selectedPlaylist(firstPlaylist.id, firstPlaylist.image, firstPlaylist.name)
+  }, [isLoading])
 
   return (
     <Carousel>

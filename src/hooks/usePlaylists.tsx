@@ -5,8 +5,8 @@ import { useContext } from 'react'
 import { HomeContext } from '@/context/HomeContext'
 import PlaylistInfosInterface from '@/interface/PlaylistInfos'
 
-export function usePlaylists(token: string | null) {
-  const api = apiSpotify()
+export function usePlaylists(token: string | undefined) {
+  const api = useSpotifyApi()
   const { setIsLoading, setUserPlaylists, setBackgroundImage } =
     useContext(HomeContext)
 
@@ -16,8 +16,7 @@ export function usePlaylists(token: string | null) {
 
     async function load() {
       try {
-        const respSpotify = (await api.get('/me')).data
-        const userId = respSpotify.id
+        const userId = await (await api.get('/me')).data.id
 
         const { data } = await api.get(`/users/${userId}/playlists`)
         const playlists = await data.items.map(

@@ -9,96 +9,25 @@ import PlaylistCarousel from '../playlist/playlistCarousel'
 import PlaylistInfo from '../playlist/playlistInfo'
 import VinylCover from '../playlist/vinylCover'
 import PlayInstrument from '../music/playInstrument'
+import { useContext, useEffect } from 'react'
 import LogoutButton from '../logoutButton'
 
 import { msToHourAndMinute } from '@/functions/msToHourAndMinute'
 import { HomeContext } from '@/context/HomeContext'
 import { SpotifyTrack } from '@/interface/SpotifyTrack'
 import { usePlaylists } from '@/hooks/usePlaylists'
-import { apiSynkro } from '@/app/api/apiSynkro'
-import { saveLocalStorage } from '@/functions/saveLocalStorage'
-import verifyExistentTokens from '@/utils/verifyExistentTokens'
-import verifyExpiresTokens from '@/utils/verifyExistentTokens copy'
-import { getLocalStorage } from '@/functions/getLocalStorage'
+import Cookies from 'js-cookie'
 
 export default function HomeTemplate() {
-  const [spotifyToken, setSpotifyToken] = useState<string | null>(null)
-  const { lastSelectedMusic, userPlaylist } = useContext(HomeContext)
-  const sessionId = useSearchParams().get('sessionId')
-  const api = apiSynkro()
+  const { lastSelectedMusic, userPlaylist, isLoading } = useContext(HomeContext)
+  const spotifyToken = Cookies.get('spotifyAccessToken')
+  usePlaylists(spotifyToken)
 
   useEffect(() => {
-    async function verifyTokens() {
-      let respTokens
-      respTokens = await verifyExistentTokens()
-      if (!respTokens) {
-        window.location.href = '/'
-      }
-
-      respTokens = await verifyExpiresTokens()
-      if (!respTokens) {
-        window.location.href = '/'
-      }
+    if (!spotifyToken) {
+      window.location.replace('/home')
     }
-    if (!sessionId) {
-      verifyTokens()
-    }
-  }, [])
-
-  useEffect(() => {
-    async function getTokens() {
-      console.log('Use effect na função do getTokens')
-      if (!sessionId) return
-
-      console.log('Passou da verificação de sessionId')
-
-      try {
-        const resp = await api.get('/auth/get-token-by-cache', {
-          params: { sessionId },
-        })
-
-        await saveLocalStorage(
-          'spotifyAccessToken',
-          resp.data.spotifyTokenInfo.accessToken,
-        )
-        await saveLocalStorage(
-          'spotifyRefreshToken',
-          resp.data.spotifyTokenInfo.refreshToken,
-        )
-
-        let timeExpire =
-          Date.now() + resp.data.spotifyTokenInfo.expiresIn * 1000
-        await saveLocalStorage(
-          'spotifyExpiresAccessToken',
-          timeExpire.toString(),
-        )
-
-        await saveLocalStorage(
-          'internalAccessToken',
-          resp.data.internalTokenInfo.accessToken,
-        )
-        timeExpire = Date.now() + resp.data.internalTokenInfo.expiresIn * 1000
-        await saveLocalStorage(
-          'internalExpiresAccessToken',
-          timeExpire.toString(),
-        )
-
-        setSpotifyToken(resp.data.spotifyTokenInfo.accessToken)
-
-        console.log('acabou de setar o spotify token')
-
-        const newUrl = window.location.origin + window.location.pathname
-        window.history.replaceState({}, '', newUrl)
-      } catch (error) {
-        console.error('Erro ao buscar tokens com sessionId:', error)
-        window.location.href = '/'
-      }
-    }
-
-    getTokens()
-  }, [sessionId])
-
-  usePlaylists(getLocalStorage('spotifyAccessToken'))
+  }, [spotifyToken])
 
   return (
     <div className="w-full h-full flex">
