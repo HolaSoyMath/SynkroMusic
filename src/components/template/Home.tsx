@@ -1,8 +1,5 @@
 'use client'
 
-import { useContext, useEffect, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
-
 import ImageSelectedMusic from '../imageSelectedMusic'
 import ItemMusic from '../music/itemMusic'
 import PlaylistCarousel from '../playlist/playlistCarousel'
@@ -19,7 +16,7 @@ import { usePlaylists } from '@/hooks/usePlaylists'
 import Cookies from 'js-cookie'
 
 export default function HomeTemplate() {
-  const { lastSelectedMusic, userPlaylist, isLoading } = useContext(HomeContext)
+  const { lastSelectedMusic, userPlaylist } = useContext(HomeContext)
   const spotifyToken = Cookies.get('spotifyAccessToken')
   usePlaylists(spotifyToken)
 

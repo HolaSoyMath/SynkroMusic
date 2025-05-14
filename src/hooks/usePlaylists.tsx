@@ -1,6 +1,6 @@
 'use client'
 import { useEffect } from 'react'
-import { apiSpotify } from '@/app/api/apiSpotify'
+import { useSpotifyApi } from '@/app/api/apiSpotify'
 import { useContext } from 'react'
 import { HomeContext } from '@/context/HomeContext'
 import PlaylistInfosInterface from '@/interface/PlaylistInfos'

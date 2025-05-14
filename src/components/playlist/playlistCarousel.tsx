@@ -4,7 +4,7 @@ import { Card, CardContent } from '../ui/card'
 import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel'
 import Image from 'next/image'
 import React, { useContext, useEffect } from 'react'
-import { apiSpotify } from '@/app/api/apiSpotify'
+import { useSpotifyApi } from '@/app/api/apiSpotify'
 import SkeletonPlaylistImage from '../skeleton/playlistImage'
 import { Skeleton } from '../ui/skeleton'
 import { sumMsDurationPlaylist } from '@/functions/sumMsDurationPlaylist'
@@ -13,7 +13,7 @@ import { HomeContext } from '@/context/HomeContext'
 import PlaylistInfosInterface from '@/interface/PlaylistInfos'
 
 export default function PlaylistCarousel() {
-  const api = apiSpotify()
+  const api = useSpotifyApi()
   const { setBackgroundImage, setUserPlaylist, isLoading, userPlaylists } =
     useContext(HomeContext)
 
@@ -49,11 +49,11 @@ export default function PlaylistCarousel() {
   )
 
   useEffect(() => {
-    console.log('userPlaylists:', userPlaylists)
-
+    if (!userPlaylists || userPlaylists.length == 0) return
     const firstPlaylist = userPlaylists[0]
     selectedPlaylist(firstPlaylist.id, firstPlaylist.image, firstPlaylist.name)
-  }, [isLoading])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, userPlaylists])
 
   return (
     <Carousel>
