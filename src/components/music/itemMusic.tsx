@@ -1,6 +1,6 @@
 'use client'
 
-import { msToMinAndSeconds } from '@/utils/msToMinuteAndSecond'
+import { msToMinAndSeconds } from '@/functions/msToMinuteAndSecond'
 import { useContext, useEffect, useState } from 'react'
 import { Button } from '../ui/button'
 import { Check } from 'lucide-react'

@@ -17,9 +17,7 @@ export default function LogoutButton() {
       onClick={() => signOut()}
     >
       <LogOut />
-      <span className="uppercase text-md tracking-widest">
-        Sair
-      </span>
+      <span className="uppercase text-md tracking-widest">Sair</span>
     </Button>
   )
 }
