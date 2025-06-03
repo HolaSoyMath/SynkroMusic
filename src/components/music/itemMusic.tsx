@@ -6,6 +6,7 @@ import { Button } from '../ui/button'
 import { Check } from 'lucide-react'
 import AnimatedParagraph from '../animatedParagraph'
 import { HomeContext } from '@/context/HomeContext'
+import { MusicProps } from '@/interface/MusicInfo'
 
 interface ItemMusicProps {
   name: string
@@ -35,21 +36,25 @@ export default function ItemMusic(musics: ItemMusicProps) {
 
     setLastSelectedMusic({ music: name, artist: artist })
 
-    if (selectedMusic.includes(id)) {
+    if (selectedMusic.some((music: MusicProps) => music.id === id)) {
       setSelectedMusic(
-        selectedMusic.filter((musicId: string) => musicId !== id),
+        selectedMusic.filter((music: MusicProps) => music.id !== id),
       )
     } else {
-      setSelectedMusic([...selectedMusic, id])
+      setSelectedMusic([
+        ...selectedMusic,
+        { id: id, music: name, artist: artist },
+      ])
     }
 
     setBackgroundImage(image)
   }
 
   useEffect(() => {
+    console.log('selectedMusic', selectedMusic)
     setLastSelectedMusic({ music: 'Nenhuma música selecionada', artist: '' })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [selectedMusic])
 
   return (
     <Button
