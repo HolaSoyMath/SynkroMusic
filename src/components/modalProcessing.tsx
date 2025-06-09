@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Dialog,
   DialogClose,
@@ -6,28 +8,30 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "./ui/dialog";
-import Image from "next/image";
-import { Progress } from "./ui/progress";
-import { Button } from "./ui/button";
+} from './ui/dialog'
+import Image from 'next/image'
+import { Progress } from './ui/progress'
+import { Button } from './ui/button'
+import { useState } from 'react'
 
 interface ModalProcessingProps {
-  openModal: boolean;
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  openModal: boolean
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function ModalProcessing({
   openModal,
   setOpenModal,
 }: ModalProcessingProps) {
-  const progress = 33;
+  const [progress, setProgress] = useState(0)
+  // setProgress(33)
 
   return (
-    <Dialog open={openModal} >
+    <Dialog open={openModal}>
       <DialogContent className="bg-foreground flex">
         <div className="bg-background rounded-full h-13 w-auto">
           <Image
-            src={"/loading.svg"}
+            src={'/loading.svg'}
             alt="Loading"
             fill={true}
             className="!sticky"
@@ -50,7 +54,10 @@ export default function ModalProcessing({
           <p className="tracking-[.08em] text-background">{progress}%...</p>
           <DialogFooter className="flex justify-end">
             <DialogClose asChild>
-              <Button className="tracking-[.08em] cursor-pointer bg-transparent border-none shadow-none hover:bg-primary" onClick={() => setOpenModal(false)}>
+              <Button
+                className="tracking-[.08em] cursor-pointer bg-transparent border-none shadow-none hover:bg-primary"
+                onClick={() => setOpenModal(false)}
+              >
                 Cancelar
               </Button>
             </DialogClose>
@@ -58,5 +65,5 @@ export default function ModalProcessing({
         </div>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

@@ -6,7 +6,7 @@ import { Button } from '../ui/button'
 import { Check } from 'lucide-react'
 import AnimatedParagraph from '../animatedParagraph'
 import { HomeContext } from '@/context/HomeContext'
-import { MusicProps } from '@/interface/MusicInfo'
+import { MusicProps } from '@/types/MusicInfo'
 
 interface ItemMusicProps {
   name: string

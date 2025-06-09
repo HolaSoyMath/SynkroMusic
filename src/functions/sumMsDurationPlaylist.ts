@@ -1,4 +1,4 @@
-import { SpotifyTrack } from '@/interface/SpotifyTrack'
+import { SpotifyTrack } from '@/types/SpotifyTrack'
 
 export function sumMsDurationPlaylist(tracks: SpotifyTrack[]) {
   return tracks.reduce((sum, track) => {

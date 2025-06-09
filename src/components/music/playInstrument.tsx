@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Button } from '../ui/button'
 import { Pause, Play } from 'lucide-react'
-import { msToMinAndSeconds } from '@/functions/msToMinuteAndSecond'
 import { Slider } from '../ui/slider'
+import { secondsToMinAndSeconds } from '@/functions/sToMinuteAndSecond'
 
 interface PlayInstrumentProps {
   name: string
@@ -13,24 +13,91 @@ interface PlayInstrumentProps {
 export default function PlayInstrument(props: PlayInstrumentProps) {
   const { name } = props
 
-  const [play, setPlay] = useState(true)
+  const [play, setPlay] = useState(false)
+  const [currentTime, setCurrentTime] = useState(0)
+  const [duration, setDuration] = useState(0)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime)
+    }
+  }
+
+  const handleEnded = () => {
+    setPlay(false)
+    setCurrentTime(0)
+  }
+
+  const handleSliderChange = (value: number) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = value
+      setCurrentTime(value)
+    }
+  }
+
+  const togglePlay = () => {
+    if (audioRef.current) {
+      if (play) {
+        audioRef.current.pause()
+      } else {
+        audioRef.current.play()
+      }
+      setPlay(!play)
+    }
+  }
+
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration)
+    }
+  }
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.addEventListener('timeupdate', handleTimeUpdate)
+      audioRef.current.addEventListener('ended', handleEnded)
+      audioRef.current.addEventListener('loadedmetadata', handleLoadedMetadata)
+
+      return () => {
+        if (audioRef.current) {
+          audioRef.current.removeEventListener('timeupdate', handleTimeUpdate)
+          audioRef.current.removeEventListener('ended', handleEnded)
+          audioRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata)
+        }
+      }
+    }
+  }, [])
 
   return (
     <div className="flex items-center px-10 py-4 bg-white/30 w-full h-1/2 gap-4">
       <span className="uppercase text-xs tracking-widest text-background w-5/12 min-w-[115px] max-w-[120px] line-clamp-1 font-semibold">
         {name}
       </span>
+
+      {/* Botão Play/Pause */}
       <Button
-        onClick={() => setPlay(!play)}
+        onClick={togglePlay}
         className="cursor-pointer bg-transparent border-none shadow-none hover:bg-transparent"
       >
-        {play && <Play className="fill-background" />}
-        {!play && <Pause className="fill-background" />}
+        {play ? <Pause className="fill-background" /> : <Play className="fill-background" />}
       </Button>
-      <Slider defaultValue={[0]} max={100} step={1} />
-      <span className=" text-right uppercase text-xs tracking-[.08em] text-background w-2/12">
-        {msToMinAndSeconds(165478)}
+
+      {/* Slider para controle de progresso */}
+      <Slider
+        value={[currentTime]}  // Atualizando o valor do slider com o estado `currentTime`
+        onValueChange={(value) => handleSliderChange(value[0])}
+        max={duration}
+        step={1}
+      />
+
+      {/* Exibindo tempo atual e duração */}
+      <span className="text-right uppercase text-xs tracking-[.08em] text-background w-2/12">
+        {secondsToMinAndSeconds(currentTime)} {/* Converter para minutos e segundos */}
       </span>
+
+      {/* Áudio oculto */}
+      <audio ref={audioRef} src="https://storage.googleapis.com/music-integration-api/In%20The%20End%20%5BOfficial%20HD%20Music%20Video%5D%20-%20Linkin%20Park.mp3" />
     </div>
   )
 }

@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useSpotifyApi } from '@/app/api/apiSpotify'
 import { useContext } from 'react'
 import { HomeContext } from '@/context/HomeContext'
-import PlaylistInfosInterface from '@/interface/PlaylistInfos'
+import PlaylistInfosInterface from '@/types/PlaylistInfos'
 
 export function usePlaylists(token: string | undefined) {
   const api = useSpotifyApi()

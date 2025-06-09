@@ -11,7 +11,7 @@ import LogoutButton from '../logoutButton'
 
 import { msToHourAndMinute } from '@/functions/msToHourAndMinute'
 import { HomeContext } from '@/context/HomeContext'
-import { SpotifyTrack } from '@/interface/SpotifyTrack'
+import { SpotifyTrack } from '@/types/SpotifyTrack'
 import { usePlaylists } from '@/hooks/usePlaylists'
 import Cookies from 'js-cookie'
 
@@ -83,7 +83,7 @@ export default function HomeTemplate() {
           </div>
 
           <div className="flex-none h-1.5/12 bg-white/30">
-            <PlayInstrument name="Vocal" />
+            <PlayInstrument name="Vocal"/>
             <PlayInstrument name="Instrumentos" />
           </div>
         </div>

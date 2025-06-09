@@ -1,5 +1,5 @@
 export interface MusicProps {
   id: string
-  name: string
+  music: string
   artist: string
 }
