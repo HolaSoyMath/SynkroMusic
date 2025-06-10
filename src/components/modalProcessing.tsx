@@ -42,7 +42,13 @@ export default function ModalProcessing({
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
   const controllerRef = useRef<AbortController | null>(null)
   
-  const { selectedMusic, userPlaylist, setUserPlaylist } = useContext(HomeContext)
+  const { 
+    selectedMusic, 
+    userPlaylist, 
+    setUserPlaylist, 
+    downloadedMusics, 
+    setDownloadedMusics 
+  } = useContext(HomeContext)
 
   const handleCancel = () => {
     if (intervalRef.current) clearInterval(intervalRef.current)
@@ -67,22 +73,15 @@ export default function ModalProcessing({
 
   // Transformando em function declaration em vez de const arrow function
   function updateProgress() {
-    console.log('update context chamado')
     
     if (isTesting) {
-      // Lógica de teste: 0% -> 80% -> 100%
+      // Lógica de teste: 0% -> 100%
       if (progress === 0) {
         setTimeout(() => {
-          console.log('Atualizando para 80%')
-          setProgress(80)
-        }, 2000)
-      } else if (progress === 80) {
-        setTimeout(() => {
-          console.log('Atualizando para 100%')
           setProgress(100)
           setCompleted(true)
           
-          // Usar o mock de resposta da API
+          // Usar o mock de resposta da API no modo de teste
           const downloadedTracks = ResponseDownloadedMusicsAPI
           
           // Atualizar o userPlaylist com as músicas baixadas
@@ -106,7 +105,23 @@ export default function ModalProcessing({
               tracks: updatedTracks,
             })
             
-            console.log('Playlist atualizada com músicas baixadas:', updatedTracks)
+            // Atualizar a lista persistente de músicas baixadas
+            const newDownloadedMusics = [...downloadedMusics]
+            
+            downloadedTracks.forEach(track => {
+              // Verificar se a música já está na lista de baixadas
+              const existingIndex = newDownloadedMusics.findIndex(dm => dm.id === track.id)
+              
+              if (existingIndex >= 0) {
+                // Atualizar música existente
+                newDownloadedMusics[existingIndex] = track
+              } else {
+                // Adicionar nova música baixada
+                newDownloadedMusics.push(track)
+              }
+            })
+            
+            setDownloadedMusics(newDownloadedMusics)
           }
           
           // Fechar o modal após a conclusão
@@ -123,8 +138,8 @@ export default function ModalProcessing({
       .then(response => {
         const currentProgress = response.data.progress
         setProgress(currentProgress)
-        console.log('progresso atual:', currentProgress)
 
+        // Na função updateProgress, quando o progresso atinge 100%
         if (currentProgress >= 100) {
           clearInterval(intervalRef.current!)
           setCompleted(true)
@@ -153,7 +168,23 @@ export default function ModalProcessing({
               tracks: updatedTracks,
             })
             
-            console.log('Playlist atualizada com músicas baixadas:', updatedTracks)
+            // Atualizar a lista persistente de músicas baixadas
+            const newDownloadedMusics = [...downloadedMusics]
+            
+            downloadedTracks.forEach(track => {
+              // Verificar se a música já está na lista de baixadas
+              const existingIndex = newDownloadedMusics.findIndex(dm => dm.id === track.id)
+              
+              if (existingIndex >= 0) {
+                // Atualizar música existente
+                newDownloadedMusics[existingIndex] = track
+              } else {
+                // Adicionar nova música baixada
+                newDownloadedMusics.push(track)
+              }
+            })
+            
+            setDownloadedMusics(newDownloadedMusics)
           }
           
           // Fechar o modal após a conclusão
@@ -212,11 +243,9 @@ export default function ModalProcessing({
 
   useEffect(() => {
     if (openModal) {
-      console.log('Modal aberto, iniciando processo...')
       // Iniciar o processo de download quando o modal for aberto
       sendMusicsToDownload().then(newJobId => {
         if (newJobId) {
-          console.log('Job ID obtido:', newJobId)
           if (isTesting) {
             // No modo de teste, chamar updateProgress diretamente
             updateProgress()

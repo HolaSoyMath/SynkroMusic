@@ -17,6 +17,8 @@ export const HomeProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [userPlaylists, setUserPlaylists] = useState([])
   const [currentTime, setCurrentTime] = useState(0)
+  // Nova lista para armazenar músicas baixadas de forma persistente
+  const [downloadedMusics, setDownloadedMusics] = useState([])
 
   return (
     <HomeContext.Provider value={{
@@ -33,7 +35,9 @@ export const HomeProvider = ({ children }) => {
       userPlaylists,
       setUserPlaylists,
       currentTime,
-      setCurrentTime
+      setCurrentTime,
+      downloadedMusics,
+      setDownloadedMusics
     }}>
       {children}
     </HomeContext.Provider>

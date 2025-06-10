@@ -16,7 +16,7 @@ import { usePlaylists } from '@/hooks/usePlaylists'
 import Cookies from 'js-cookie'
 
 export default function HomeTemplate() {
-  const { lastSelectedMusic, userPlaylist, currentTime, setCurrentTime } =
+  const { lastSelectedMusic, userPlaylist, currentTime, setCurrentTime, downloadedMusics } =
     useContext(HomeContext)
   const spotifyToken = Cookies.get('spotifyAccessToken')
   usePlaylists(spotifyToken)
@@ -70,7 +70,9 @@ export default function HomeTemplate() {
           </div>
 
           <div className="overflow-y-scroll flex-1">
-            {userPlaylist?.tracks?.map((track: SpotifyTrack) => (
+            {userPlaylist?.tracks?.map((track: SpotifyTrack) => {
+              const isDownloaded = downloadedMusics.some(dm => dm.id === track.id)
+              return(
               <ItemMusic
                 key={track.id}
                 name={track.name}
@@ -78,9 +80,9 @@ export default function HomeTemplate() {
                 musicId={track.id}
                 image={track.image}
                 artist={track.artist}
-                downloaded={track.downloaded || false}
+                downloaded={isDownloaded}
               />
-            ))}  
+            )})}  
           </div>
 
           <div className="flex-none h-1.5/12 bg-white/30">

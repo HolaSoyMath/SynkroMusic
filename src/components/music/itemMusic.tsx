@@ -23,17 +23,27 @@ export default function ItemMusic(musics: ItemMusicProps) {
     setSelectedMusic,
     setBackgroundImage,
     setLastSelectedMusic,
+    downloadedMusics
   } = useContext(HomeContext)
 
-  const { name, durationMs, musicId, image, artist, downloaded } = musics
+  const { name, durationMs, musicId, image, artist, downloaded: propDownloaded } = musics
 
-  const checked = selectedMusic.includes(musicId)
+  // Verificar se a música está na lista de downloadedMusics
+  const isDownloaded = propDownloaded || downloadedMusics.some(music => music.id === musicId)
+  
+  const checked = selectedMusic.some((music: MusicProps) => music.id === musicId) || isDownloaded
   const [check, setCheck] = useState(checked)
   const [hovered, setHovered] = useState(false)
 
+  // Atualizar o estado de check quando selectedMusic ou downloadedMusics mudar
+  useEffect(() => {
+    const isSelected = selectedMusic.some((music: MusicProps) => music.id === musicId)
+    setCheck(isSelected || isDownloaded)
+  }, [selectedMusic, downloadedMusics, musicId, isDownloaded])
+
   function changeMusicList(id: string, name: string, image: string) {
     // Se a música já estiver baixada, não permitir alteração do estado de seleção
-    if (downloaded) {
+    if (isDownloaded) {
       // Garantir que a música baixada esteja na lista selectedMusic
       if (!selectedMusic.some((music: MusicProps) => music.id === id)) {
         setSelectedMusic([
@@ -47,18 +57,19 @@ export default function ItemMusic(musics: ItemMusicProps) {
     }
 
     // Comportamento normal para músicas não baixadas
-    setCheck(!check)
     setLastSelectedMusic({ music: name, artist: artist })
     
     if (selectedMusic.some((music: MusicProps) => music.id === id)) {
       setSelectedMusic(
         selectedMusic.filter((music: MusicProps) => music.id !== id),
       )
+      setCheck(false)
     } else {
       setSelectedMusic([
         ...selectedMusic,
         { id: id, music: name, artist: artist },
       ])
+      setCheck(true)
     }
 
     setBackgroundImage(image)
@@ -79,19 +90,19 @@ export default function ItemMusic(musics: ItemMusicProps) {
     >
       <div className="w-1/12 h-full flex items-center relative">
         <input
-          data-downloaded={downloaded}
+          data-downloaded={isDownloaded}
           id={musicId}
           type="checkbox"
           checked={check}
-          onChange={() => setCheck(!check)}
+          onChange={() => changeMusicList(musicId, name, image)}
           color="red"
           className={`w-4 h-4 appearance-none cursor-pointer border-1 border-background transition-all duration-300 rounded-sm
-            ${check && !downloaded && 'checked:bg-background'} 
-            ${downloaded && 'bg-green-600 border-green-600 !rounded-full'}
+            ${check && !isDownloaded && 'checked:bg-background'} 
+            ${isDownloaded && 'bg-green-600 border-green-600 !rounded-full'}
             `}
         />
         {check && <Check className="text-foreground absolute" size={2} />}
-        {downloaded && <Check className="text-foreground absolute" />}
+        {isDownloaded && <Check className="text-foreground absolute" />}
       </div>
 
       <div className="w-full max-w-10/12">
