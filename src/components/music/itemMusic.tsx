@@ -51,8 +51,24 @@ export default function ItemMusic(musics: ItemMusicProps) {
           { id: id, music: name, artist: artist },
         ])
       }
+      
+      // Encontrar a música baixada na lista downloadedMusics
+      const downloadedMusic = downloadedMusics.find(music => music.id === id)
+      
+      // Atualizar lastSelectedMusic com as URLs dos arquivos de áudio
+      if (downloadedMusic) {
+        setLastSelectedMusic({
+          music: name,
+          artist: artist,
+          linkVocal: downloadedMusic.vocal,
+          linkInstruments: downloadedMusic.instrument
+        })
+      }
+      
       // Manter o checkbox marcado
       setCheck(true)
+      // Atualizar a imagem de fundo
+      setBackgroundImage(image)
       return
     }
 
@@ -77,7 +93,8 @@ export default function ItemMusic(musics: ItemMusicProps) {
 
   useEffect(() => {
     console.log('selectedMusic', selectedMusic)
-    setLastSelectedMusic({ music: 'Nenhuma música selecionada', artist: '' })
+    // Não resetar lastSelectedMusic aqui, pois isso interfere com a exibição dos controles
+    // setLastSelectedMusic({ music: 'Nenhuma música selecionada', artist: '' })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMusic])
 
