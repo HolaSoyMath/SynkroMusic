@@ -1,24 +1,25 @@
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 import axios from 'axios'
-import { DataSynkro } from './types/dataSynkro'
+import { TokenDataSynkro } from './types/dataSynkro'
 
 export async function middleware(request: NextRequest) {
   const cookieStore = await cookies()
-  
+
   // Verificar se os cookies relacionados ao Spotify estão presentes e se o token expirou
   const spotifyExpiresInCookie = cookieStore.get('spotifyExpiresIn')
   if (spotifyExpiresInCookie) {
-    const hasSpotifyTokenExpired = Date.now() >= Number(spotifyExpiresInCookie.value)
+    const hasSpotifyTokenExpired =
+      Date.now() >= Number(spotifyExpiresInCookie.value)
 
     if (hasSpotifyTokenExpired) {
       // Se o token expirou, deletar todos os cookies e redirecionar para o Login
       const allCookies = cookieStore.getAll()
       allCookies.forEach((cookie) => cookieStore.delete(cookie.name))
-      
+
       return NextResponse.redirect(new URL('/', request.url))
     }
-    
+
     // Se o token ainda está válido, redirecionar para a página Home
     return NextResponse.redirect(new URL('/home/playlists', request.url))
   }
@@ -39,7 +40,7 @@ export async function middleware(request: NextRequest) {
       { params: { sessionId: sessionId } },
     )
 
-  const data: DataSynkro = resp.data
+  const data: TokenDataSynkro = resp.data
   const spotifyTokenExpires = Date.now() + data.spotifyTokenInfo.expiresIn
 
   // Armazenar os tokens e dados nos cookies
@@ -49,8 +50,10 @@ export async function middleware(request: NextRequest) {
   cookieStore.set('spotifyRefreshToken', data.spotifyTokenInfo.refreshToken)
   cookieStore.set('spotifyExpiresIn', spotifyTokenExpires.toString())
   cookieStore.set('internalAccessToken', data.internalTokenInfo.accessToken)
-  cookieStore.set('internalExpiresIn', data.internalTokenInfo.expiresIn.toString())
-
+  cookieStore.set(
+    'internalExpiresIn',
+    data.internalTokenInfo.expiresIn.toString(),
+  )
 
   // Armazenar sessionId no cookie para persistência
   cookieStore.set('sessionId', sessionId)

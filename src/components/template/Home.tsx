@@ -16,7 +16,8 @@ import { usePlaylists } from '@/hooks/usePlaylists'
 import Cookies from 'js-cookie'
 
 export default function HomeTemplate() {
-  const { lastSelectedMusic, userPlaylist } = useContext(HomeContext)
+  const { lastSelectedMusic, userPlaylist, currentTime, setCurrentTime } =
+    useContext(HomeContext)
   const spotifyToken = Cookies.get('spotifyAccessToken')
   usePlaylists(spotifyToken)
 
@@ -77,14 +78,28 @@ export default function HomeTemplate() {
                 musicId={track.id}
                 image={track.image}
                 artist={track.artist}
-                downloaded={false}
+                downloaded={track.downloaded || false}
               />
-            ))}
+            ))}  
           </div>
 
           <div className="flex-none h-1.5/12 bg-white/30">
-            <PlayInstrument name="Vocal"/>
-            <PlayInstrument name="Instrumentos" />
+            {lastSelectedMusic.linkVocal && (
+              <PlayInstrument
+                name="Vocal"
+                linkSong={lastSelectedMusic.linkVocal || ""}
+                sharedTime={currentTime}
+                onTimeUpdate={setCurrentTime}
+              />
+            )}
+            {lastSelectedMusic.linkInstruments && (
+              <PlayInstrument
+                name="Instrumentos"
+                linkSong={lastSelectedMusic.linkInstruments || ""}
+                sharedTime={currentTime}
+                onTimeUpdate={setCurrentTime}
+              />
+            )}
           </div>
         </div>
       </section>

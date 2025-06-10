@@ -1,4 +1,4 @@
-export interface DataSynkro {
+export interface TokenDataSynkro {
   spotifyTokenInfo: {
     accessToken: string
     refreshToken: string
@@ -8,4 +8,10 @@ export interface DataSynkro {
     accessToken: string
     expiresIn: number
   }
+}
+
+export interface DownloadedMusics {
+  id: string,
+  vocal: string,
+  instrument: string
 }

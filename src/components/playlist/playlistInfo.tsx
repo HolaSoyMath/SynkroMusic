@@ -4,9 +4,7 @@ import { RotateCw } from 'lucide-react'
 import { Button } from '../ui/button'
 import ModalProcessing from '../modalProcessing'
 import { useContext, useState } from 'react'
-import { useSynkroApi } from '@/app/api/apiSynkro'
 import { HomeContext } from '@/context/HomeContext'
-import { MusicProps } from '@/types/MusicInfo'
 
 interface PlaylistInfoProps {
   name: string
@@ -15,19 +13,18 @@ interface PlaylistInfoProps {
 }
 
 export default function PlaylistInfo(infos: PlaylistInfoProps) {
-  const api = useSynkroApi()
   const { selectedMusic } = useContext(HomeContext)
   const [openModal, setOpenModal] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
   const { name, quantity, time } = infos
 
-  async function sendMusicsToDownload() {
-    console.log('selectedMusic', selectedMusic)
-    const musicsToDownload = selectedMusic.map((music: MusicProps) => ({
-      song: music.music,
-      author: music.artist,
-    }))
-    console.log('musicsToDownload', musicsToDownload)
-    await api.post(`/download/playlist`, musicsToDownload)
+  const handleProcessClick = () => {
+    setIsProcessing(true)
+    setOpenModal(true)
+  }
+
+  const handleModalClose = () => {
+    setIsProcessing(false)
   }
 
   return (
@@ -42,21 +39,21 @@ export default function PlaylistInfo(infos: PlaylistInfoProps) {
       </div>
       <div className="w-1/3 flex justify-end">
         <Button
-          className="bg-background text-foreground rounded-full font-light cursor-pointer hover:bg-[#D0D0D0] hover:text-background group"
-          onClick={() => {
-            setOpenModal(!openModal)
-            sendMusicsToDownload()
-          }}
+          className="bg-background text-foreground rounded-full font-light cursor-pointer hover:bg-[#D0D0D0] hover:text-background group disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={handleProcessClick}
+          disabled={isProcessing || selectedMusic.length === 0}
         >
           <div className="transform transition-transform duration-300 group-hover:rotate-180">
             <RotateCw />
           </div>
-          <span>Processar</span>
+          <span>{isProcessing ? 'Processando...' : 'Processar'}</span>
         </Button>
       </div>
-      {openModal && (
-        <ModalProcessing openModal={openModal} setOpenModal={setOpenModal} />
-      )}
+      <ModalProcessing
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        onCancel={() => handleModalClose()}
+      />
     </div>
   )
 }

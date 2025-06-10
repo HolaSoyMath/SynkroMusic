@@ -7,32 +7,34 @@ import { Slider } from '../ui/slider'
 import { secondsToMinAndSeconds } from '@/functions/sToMinuteAndSecond'
 
 interface PlayInstrumentProps {
-  name: string
+  name: string,
+  linkSong: string,
+  sharedTime: number,
+  onTimeUpdate: (time: number) => void
 }
 
 export default function PlayInstrument(props: PlayInstrumentProps) {
-  const { name } = props
+  const { name, linkSong, sharedTime, onTimeUpdate } = props
 
   const [play, setPlay] = useState(false)
-  const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   const handleTimeUpdate = () => {
     if (audioRef.current) {
-      setCurrentTime(audioRef.current.currentTime)
+      onTimeUpdate(audioRef.current.currentTime)
     }
   }
 
   const handleEnded = () => {
     setPlay(false)
-    setCurrentTime(0)
+    onTimeUpdate(0)
   }
 
   const handleSliderChange = (value: number) => {
     if (audioRef.current) {
       audioRef.current.currentTime = value
-      setCurrentTime(value)
+      onTimeUpdate(value)
     }
   }
 
@@ -69,13 +71,19 @@ export default function PlayInstrument(props: PlayInstrumentProps) {
     }
   }, [])
 
+  // Sincronizar com o tempo compartilhado
+  useEffect(() => {
+    if (audioRef.current && Math.abs(audioRef.current.currentTime - sharedTime) > 0.5) {
+      audioRef.current.currentTime = sharedTime
+    }
+  }, [sharedTime])
+
   return (
     <div className="flex items-center px-10 py-4 bg-white/30 w-full h-1/2 gap-4">
       <span className="uppercase text-xs tracking-widest text-background w-5/12 min-w-[115px] max-w-[120px] line-clamp-1 font-semibold">
         {name}
       </span>
 
-      {/* Botão Play/Pause */}
       <Button
         onClick={togglePlay}
         className="cursor-pointer bg-transparent border-none shadow-none hover:bg-transparent"
@@ -83,21 +91,18 @@ export default function PlayInstrument(props: PlayInstrumentProps) {
         {play ? <Pause className="fill-background" /> : <Play className="fill-background" />}
       </Button>
 
-      {/* Slider para controle de progresso */}
       <Slider
-        value={[currentTime]}  // Atualizando o valor do slider com o estado `currentTime`
+        value={[sharedTime]}  
         onValueChange={(value) => handleSliderChange(value[0])}
         max={duration}
         step={1}
       />
 
-      {/* Exibindo tempo atual e duração */}
       <span className="text-right uppercase text-xs tracking-[.08em] text-background w-2/12">
-        {secondsToMinAndSeconds(currentTime)} {/* Converter para minutos e segundos */}
+        {secondsToMinAndSeconds(sharedTime)}
       </span>
 
-      {/* Áudio oculto */}
-      <audio ref={audioRef} src="https://storage.googleapis.com/music-integration-api/In%20The%20End%20%5BOfficial%20HD%20Music%20Video%5D%20-%20Linkin%20Park.mp3" />
+      <audio ref={audioRef} src={linkSong} />
     </div>
   )
 }

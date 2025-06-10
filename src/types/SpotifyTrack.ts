@@ -4,4 +4,5 @@ export interface SpotifyTrack{
   duration_ms: number
   artist: string
   image: string
+  downloaded?: boolean
 }

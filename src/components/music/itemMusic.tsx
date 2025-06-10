@@ -14,7 +14,7 @@ interface ItemMusicProps {
   musicId: string
   image: string
   artist: string
-  downloaded: boolean
+  downloaded?: boolean
 }
 
 export default function ItemMusic(musics: ItemMusicProps) {
@@ -32,10 +32,24 @@ export default function ItemMusic(musics: ItemMusicProps) {
   const [hovered, setHovered] = useState(false)
 
   function changeMusicList(id: string, name: string, image: string) {
+    // Se a música já estiver baixada, não permitir alteração do estado de seleção
+    if (downloaded) {
+      // Garantir que a música baixada esteja na lista selectedMusic
+      if (!selectedMusic.some((music: MusicProps) => music.id === id)) {
+        setSelectedMusic([
+          ...selectedMusic,
+          { id: id, music: name, artist: artist },
+        ])
+      }
+      // Manter o checkbox marcado
+      setCheck(true)
+      return
+    }
+
+    // Comportamento normal para músicas não baixadas
     setCheck(!check)
-
     setLastSelectedMusic({ music: name, artist: artist })
-
+    
     if (selectedMusic.some((music: MusicProps) => music.id === id)) {
       setSelectedMusic(
         selectedMusic.filter((music: MusicProps) => music.id !== id),
@@ -65,14 +79,15 @@ export default function ItemMusic(musics: ItemMusicProps) {
     >
       <div className="w-1/12 h-full flex items-center relative">
         <input
+          data-downloaded={downloaded}
           id={musicId}
           type="checkbox"
           checked={check}
           onChange={() => setCheck(!check)}
           color="red"
-          className={`w-4 h-4 appearance-none cursor-pointer border-1 border-background transition-all duration-300 rounded-sm 
-            ${check && 'checked:bg-background'} 
-            ${downloaded && 'rounded-full bg-green-600 border-green-600'}
+          className={`w-4 h-4 appearance-none cursor-pointer border-1 border-background transition-all duration-300 rounded-sm
+            ${check && !downloaded && 'checked:bg-background'} 
+            ${downloaded && 'bg-green-600 border-green-600 !rounded-full'}
             `}
         />
         {check && <Check className="text-foreground absolute" size={2} />}
