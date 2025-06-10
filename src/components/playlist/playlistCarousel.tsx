@@ -8,9 +8,9 @@ import { useSpotifyApi } from '@/app/api/apiSpotify'
 import SkeletonPlaylistImage from '../skeleton/playlistImage'
 import { Skeleton } from '../ui/skeleton'
 import { sumMsDurationPlaylist } from '@/functions/sumMsDurationPlaylist'
-import { SpotifyTrack } from '@/interface/SpotifyTrack'
+import { SpotifyTrack } from '@/types/SpotifyTrack'
 import { HomeContext } from '@/context/HomeContext'
-import PlaylistInfosInterface from '@/interface/PlaylistInfos'
+import PlaylistInfosInterface from '@/types/PlaylistInfos'
 
 export default function PlaylistCarousel() {
   const api = useSpotifyApi()
@@ -52,7 +52,7 @@ export default function PlaylistCarousel() {
     if (!userPlaylists || userPlaylists.length == 0) return
     const firstPlaylist = userPlaylists[0]
     selectedPlaylist(firstPlaylist.id, firstPlaylist.image, firstPlaylist.name)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, userPlaylists])
 
   return (

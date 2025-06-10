@@ -11,12 +11,13 @@ import LogoutButton from '../logoutButton'
 
 import { msToHourAndMinute } from '@/functions/msToHourAndMinute'
 import { HomeContext } from '@/context/HomeContext'
-import { SpotifyTrack } from '@/interface/SpotifyTrack'
+import { SpotifyTrack } from '@/types/SpotifyTrack'
 import { usePlaylists } from '@/hooks/usePlaylists'
 import Cookies from 'js-cookie'
 
 export default function HomeTemplate() {
-  const { lastSelectedMusic, userPlaylist } = useContext(HomeContext)
+  const { lastSelectedMusic, userPlaylist, currentTime, setCurrentTime, downloadedMusics } =
+    useContext(HomeContext)
   const spotifyToken = Cookies.get('spotifyAccessToken')
   usePlaylists(spotifyToken)
 
@@ -69,7 +70,9 @@ export default function HomeTemplate() {
           </div>
 
           <div className="overflow-y-scroll flex-1">
-            {userPlaylist?.tracks?.map((track: SpotifyTrack) => (
+            {userPlaylist?.tracks?.map((track: SpotifyTrack) => {
+              const isDownloaded = downloadedMusics.some((dm: { id: string }) => dm.id === track.id)
+              return(
               <ItemMusic
                 key={track.id}
                 name={track.name}
@@ -77,14 +80,28 @@ export default function HomeTemplate() {
                 musicId={track.id}
                 image={track.image}
                 artist={track.artist}
-                downloaded={false}
+                downloaded={isDownloaded}
               />
-            ))}
+            )})}  
           </div>
 
           <div className="flex-none h-1.5/12 bg-white/30">
-            <PlayInstrument name="Vocal" />
-            <PlayInstrument name="Instrumentos" />
+            {lastSelectedMusic.linkVocal && (
+              <PlayInstrument
+                name="Vocal"
+                linkSong={lastSelectedMusic.linkVocal || ""}
+                sharedTime={currentTime}
+                onTimeUpdate={setCurrentTime}
+              />
+            )}
+            {lastSelectedMusic.linkInstruments && (
+              <PlayInstrument
+                name="Instrumentos"
+                linkSong={lastSelectedMusic.linkInstruments || ""}
+                sharedTime={currentTime}
+                onTimeUpdate={setCurrentTime}
+              />
+            )}
           </div>
         </div>
       </section>

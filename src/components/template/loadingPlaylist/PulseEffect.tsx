@@ -56,6 +56,7 @@ export default function PulseEffect(props: PulseEffectProps) {
         loop: true,
       });
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gridData]);
 
   return (

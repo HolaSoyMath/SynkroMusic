@@ -6,6 +6,7 @@ import { Button } from '../ui/button'
 import { Check } from 'lucide-react'
 import AnimatedParagraph from '../animatedParagraph'
 import { HomeContext } from '@/context/HomeContext'
+import { MusicProps } from '@/types/MusicInfo'
 
 interface ItemMusicProps {
   name: string
@@ -13,7 +14,7 @@ interface ItemMusicProps {
   musicId: string
   image: string
   artist: string
-  downloaded: boolean
+  downloaded?: boolean
 }
 
 export default function ItemMusic(musics: ItemMusicProps) {
@@ -22,56 +23,96 @@ export default function ItemMusic(musics: ItemMusicProps) {
     setSelectedMusic,
     setBackgroundImage,
     setLastSelectedMusic,
+    downloadedMusics
   } = useContext(HomeContext)
 
-  const { name, durationMs, musicId, image, artist, downloaded } = musics
+  const { name, durationMs, musicId, image, artist, downloaded: propDownloaded } = musics
 
-  const checked = selectedMusic.includes(musicId)
+  // Verificar se a música está na lista de downloadedMusics
+  const isDownloaded = propDownloaded || downloadedMusics.some((music: { id: string }) => music.id === musicId)
+  
+  const checked = selectedMusic.some((music: MusicProps) => music.id === musicId) || isDownloaded
   const [check, setCheck] = useState(checked)
   const [hovered, setHovered] = useState(false)
 
+  // Atualizar o estado de check quando selectedMusic ou downloadedMusics mudar
+  useEffect(() => {
+    const isSelected = selectedMusic.some((music: MusicProps) => music.id === musicId)
+    setCheck(isSelected || isDownloaded)
+  }, [selectedMusic, downloadedMusics, musicId, isDownloaded])
+
   function changeMusicList(id: string, name: string, image: string) {
-    setCheck(!check)
+    // Se a música já estiver baixada, não permitir alteração do estado de seleção
+    if (isDownloaded) {
+      // Garantir que a música baixada esteja na lista selectedMusic
+      if (!selectedMusic.some((music: MusicProps) => music.id === id)) {
+        setSelectedMusic([
+          ...selectedMusic,
+          { id: id, music: name, artist: artist },
+        ])
+      }
+      
+      // Encontrar a música baixada na lista downloadedMusics
+      const downloadedMusic = downloadedMusics.find((music: { id: string }) => music.id === id)
+      
+      // Atualizar lastSelectedMusic com as URLs dos arquivos de áudio
+      if (downloadedMusic) {
+        setLastSelectedMusic({
+          music: name,
+          artist: artist,
+          linkVocal: downloadedMusic.vocal,
+          linkInstruments: downloadedMusic.instrument
+        })
+      }
+      
+      // Manter o checkbox marcado
+      setCheck(true)
+      // Atualizar a imagem de fundo
+      setBackgroundImage(image)
+      return
+    }
 
+    // Comportamento normal para músicas não baixadas
     setLastSelectedMusic({ music: name, artist: artist })
-
-    if (selectedMusic.includes(id)) {
+    
+    if (selectedMusic.some((music: MusicProps) => music.id === id)) {
       setSelectedMusic(
-        selectedMusic.filter((musicId: string) => musicId !== id),
+        selectedMusic.filter((music: MusicProps) => music.id !== id),
       )
+      setCheck(false)
     } else {
-      setSelectedMusic([...selectedMusic, id])
+      setSelectedMusic([
+        ...selectedMusic,
+        { id: id, music: name, artist: artist },
+      ])
+      setCheck(true)
     }
 
     setBackgroundImage(image)
   }
 
-  useEffect(() => {
-    setLastSelectedMusic({ music: 'Nenhuma música selecionada', artist: '' })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   return (
     <Button
       className="flex px-15 py-6 rounded-none w-full text-start bg-transparent shadow-none hover:bg-white/30 transform duration-300 cursor-pointer items-center"
-      onClick={() => changeMusicList(musicId, name, image)}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onClick={(): void => changeMusicList(musicId, name, image)}
+      onMouseEnter={(): void => setHovered(true)}
+      onMouseLeave={(): void => setHovered(false)}
     >
       <div className="w-1/12 h-full flex items-center relative">
         <input
+          data-downloaded={isDownloaded}
           id={musicId}
           type="checkbox"
           checked={check}
-          onChange={() => setCheck(!check)}
+          onChange={(): void => changeMusicList(musicId, name, image)}
           color="red"
-          className={`w-4 h-4 appearance-none cursor-pointer border-1 border-background transition-all duration-300 rounded-sm 
-            ${check && 'checked:bg-background'} 
-            ${downloaded && 'rounded-full bg-green-600 border-green-600'}
+          className={`w-4 h-4 appearance-none cursor-pointer border-1 border-background transition-all duration-300 rounded-sm
+            ${check && !isDownloaded && 'checked:bg-background'} 
+            ${isDownloaded && 'bg-green-600 border-green-600 !rounded-full'}
             `}
         />
         {check && <Check className="text-foreground absolute" size={2} />}
-        {downloaded && <Check className="text-foreground absolute" />}
+        {isDownloaded && <Check className="text-foreground absolute" />}
       </div>
 
       <div className="w-full max-w-10/12">
