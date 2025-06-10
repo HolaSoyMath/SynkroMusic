@@ -150,7 +150,7 @@ export default function ModalProcessing({
           // Atualizar o userPlaylist com as músicas baixadas
           if (userPlaylist?.tracks) {
             const updatedTracks = userPlaylist.tracks.map((track: SpotifyTrack) => {
-              const downloadedTrack = downloadedTracks.find(dt => dt.id === track.id)
+              const downloadedTrack = downloadedTracks.find((dt: { id: string }) => dt.id === track.id)
               if (downloadedTrack) {
                 return {
                   ...track,
@@ -171,9 +171,9 @@ export default function ModalProcessing({
             // Atualizar a lista persistente de músicas baixadas
             const newDownloadedMusics = [...downloadedMusics]
             
-            downloadedTracks.forEach(track => {
+            downloadedTracks.forEach((track: { id: string; vocal: string; instrument: string }) => {
               // Verificar se a música já está na lista de baixadas
-              const existingIndex = newDownloadedMusics.findIndex(dm => dm.id === track.id)
+              const existingIndex = newDownloadedMusics.findIndex((dm: { id: string }) => dm.id === track.id)
               
               if (existingIndex >= 0) {
                 // Atualizar música existente
@@ -244,7 +244,7 @@ export default function ModalProcessing({
   useEffect(() => {
     if (openModal) {
       // Iniciar o processo de download quando o modal for aberto
-      sendMusicsToDownload().then(newJobId => {
+      sendMusicsToDownload().then((newJobId: string | null) => {
         if (newJobId) {
           if (isTesting) {
             // No modo de teste, chamar updateProgress diretamente
@@ -267,6 +267,7 @@ export default function ModalProcessing({
         controllerRef.current.abort()
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openModal])
 
   return (

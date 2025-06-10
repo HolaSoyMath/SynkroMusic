@@ -29,7 +29,7 @@ export default function ItemMusic(musics: ItemMusicProps) {
   const { name, durationMs, musicId, image, artist, downloaded: propDownloaded } = musics
 
   // Verificar se a música está na lista de downloadedMusics
-  const isDownloaded = propDownloaded || downloadedMusics.some(music => music.id === musicId)
+  const isDownloaded = propDownloaded || downloadedMusics.some((music: { id: string }) => music.id === musicId)
   
   const checked = selectedMusic.some((music: MusicProps) => music.id === musicId) || isDownloaded
   const [check, setCheck] = useState(checked)
@@ -53,7 +53,7 @@ export default function ItemMusic(musics: ItemMusicProps) {
       }
       
       // Encontrar a música baixada na lista downloadedMusics
-      const downloadedMusic = downloadedMusics.find(music => music.id === id)
+      const downloadedMusic = downloadedMusics.find((music: { id: string }) => music.id === id)
       
       // Atualizar lastSelectedMusic com as URLs dos arquivos de áudio
       if (downloadedMusic) {
@@ -91,19 +91,12 @@ export default function ItemMusic(musics: ItemMusicProps) {
     setBackgroundImage(image)
   }
 
-  useEffect(() => {
-    console.log('selectedMusic', selectedMusic)
-    // Não resetar lastSelectedMusic aqui, pois isso interfere com a exibição dos controles
-    // setLastSelectedMusic({ music: 'Nenhuma música selecionada', artist: '' })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedMusic])
-
   return (
     <Button
       className="flex px-15 py-6 rounded-none w-full text-start bg-transparent shadow-none hover:bg-white/30 transform duration-300 cursor-pointer items-center"
-      onClick={() => changeMusicList(musicId, name, image)}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onClick={(): void => changeMusicList(musicId, name, image)}
+      onMouseEnter={(): void => setHovered(true)}
+      onMouseLeave={(): void => setHovered(false)}
     >
       <div className="w-1/12 h-full flex items-center relative">
         <input
@@ -111,7 +104,7 @@ export default function ItemMusic(musics: ItemMusicProps) {
           id={musicId}
           type="checkbox"
           checked={check}
-          onChange={() => changeMusicList(musicId, name, image)}
+          onChange={(): void => changeMusicList(musicId, name, image)}
           color="red"
           className={`w-4 h-4 appearance-none cursor-pointer border-1 border-background transition-all duration-300 rounded-sm
             ${check && !isDownloaded && 'checked:bg-background'} 

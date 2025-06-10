@@ -71,7 +71,7 @@ export default function HomeTemplate() {
 
           <div className="overflow-y-scroll flex-1">
             {userPlaylist?.tracks?.map((track: SpotifyTrack) => {
-              const isDownloaded = downloadedMusics.some(dm => dm.id === track.id)
+              const isDownloaded = downloadedMusics.some((dm: { id: string }) => dm.id === track.id)
               return(
               <ItemMusic
                 key={track.id}

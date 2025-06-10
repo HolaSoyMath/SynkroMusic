@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
@@ -93,7 +94,7 @@ export default function PlayInstrument(props: PlayInstrumentProps) {
 
       <Slider
         value={[sharedTime]}  
-        onValueChange={(value) => handleSliderChange(value[0])}
+        onValueChange={(value: number[]) => handleSliderChange(value[0])}
         max={duration}
         step={1}
       />
