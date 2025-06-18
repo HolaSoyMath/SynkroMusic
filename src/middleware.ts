@@ -36,7 +36,7 @@ export async function middleware(request: NextRequest) {
   const resp = await axios
     .create()
     .get(
-      'https://music-api-integration.onrender.com/api/auth/get-token-by-cache',
+      'https://music-api-integration-prod.onrender.com/api/auth/get-token-by-cache',
       { params: { sessionId: sessionId } },
     )
 
