@@ -5,7 +5,7 @@ import Image from 'next/image'
 
 export default function LoginButton() {
   function signIn() {
-    window.location.href = 'https://music-api-integration.onrender.com/api/auth/login'
+    window.location.href = 'https://music-api-integration-prod.onrender.com/api/auth/login'
     return
   }
   return (
